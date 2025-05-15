@@ -7,9 +7,12 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(SFML COMPONENTS Graphics Window System REQUIRED)
 
 add_subdirectory(core/)
+add_subdirectory(game/)
+
 
 file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 
-add_executable(city_builder main.cc)
+add_executable(CityBuilder main.cc
+        core/src/map_generation.cc)
 
-target_link_libraries(city_builder PRIVATE core SFML::Graphics SFML::Window SFML::System)
+target_link_libraries(CityBuilder PRIVATE game core SFML::System SFML::Graphics SFML::Window)
