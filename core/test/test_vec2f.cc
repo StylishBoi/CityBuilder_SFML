@@ -1,85 +1,229 @@
-#include "gtest/gtest.h"
 #include "maths/vec2f.h"
 
-TEST(Vec2f, Empty) {
-  core::Vec2f v;
-  EXPECT_FLOAT_EQ(0, v.x);
-  EXPECT_FLOAT_EQ(0, v.y);
-}
+#include <gtest/gtest.h>
+#include <iostream>
 
-TEST(Vec2f, Add)
+struct Vec2fOperationFixture : public ::testing::TestWithParam<std::pair<core::maths::Vec2f, core::maths::Vec2f>>
 {
-    constexpr float x1 = 1, x2 = 2;
-    constexpr float y1 = 0, y2 = -4;
+};
 
-    constexpr core::Vec2f v1{x1,x2};
-    constexpr core::Vec2f v2{y1,y2};
-
-    constexpr auto result = v1 + v2;
-
-    static_assert(result.x == x1 + y1);
-    static_assert(result.y == x2 + y2);
-
-    EXPECT_FLOAT_EQ(result.x, x1 + y1);
-    EXPECT_FLOAT_EQ(result.y, x2 + y2);
-}
-
-TEST(Vec2f, Substraction)
+//TEST_P means it's a test using a value as a parameter.
+//The parameter values can be found at the bottom of the code
+TEST_P(Vec2fOperationFixture, Add)
 {
-    constexpr float x1 = 1, x2 = 2;
-    constexpr float y1 = 0, y2 = -4;
+  //Defines v1 and v2 with the parameter insert command
+  //The parameter values can be found at the bottom of the code
+	auto       [v1, v2] = GetParam();
 
-    constexpr core::Vec2f v1{x1,x2};
-    constexpr core::Vec2f v2{y1,y2};
+  //Adds up the two 'Vec2f' via the operator+ found in the header
+	const auto result = v1 + v2;
 
-    constexpr auto result = v1 - v2;
-
-    static_assert(result.x == x1 - y1);
-    static_assert(result.y == x2 - y2);
-
-    EXPECT_FLOAT_EQ(result.x, x1 - y1);
-    EXPECT_FLOAT_EQ(result.y, x2 - y2);
+  //Verify if the float values are approximately equal
+	EXPECT_FLOAT_EQ(result.x, v1.x + v2.x);
+	EXPECT_FLOAT_EQ(result.y, v1.y + v2.y);
 }
 
-TEST(Vec2f, Multiply)
+TEST_P(Vec2fOperationFixture, Sub)
 {
-    constexpr float x1 = 1, x2 = 2;
-    constexpr float y1 = 0, y2 = -4;
+  //Defines v1 and v2 with the parameter insert command
+  //The parameter values can be found at the bottom of the code
+	auto       [v1, v2] = GetParam();
 
-    constexpr core::Vec2f v1{x1,x2};
-    constexpr core::Vec2f v2{y1,y2};
+  //Subtracts the two 'Vec2f' via the operator- found in the header
+	const auto result = v1 - v2;
 
-    constexpr auto result = v1 * v2;
+  //Verify if the float values are approximately equal
+	EXPECT_FLOAT_EQ(result.x, v1.x - v2.x);
+	EXPECT_FLOAT_EQ(result.y, v1.y - v2.y);
 
-    static_assert(result.x == x1 * y1);
-    static_assert(result.y == x2 * y2);
+  //Makes the 'Vec2f' become negative via the header
+	const auto neg1 = -v1;
+	const auto neg2 = -v2;
 
-    EXPECT_FLOAT_EQ(result.x, x1 * y1);
-    EXPECT_FLOAT_EQ(result.y, x2 * y2);
+  //Verify if the float values are approximately equal
+	EXPECT_FLOAT_EQ(neg1.x, -v1.x);
+	EXPECT_FLOAT_EQ(neg1.y, -v1.y);
+	EXPECT_FLOAT_EQ(neg2.x, -v2.x);
+	EXPECT_FLOAT_EQ(neg2.y, -v2.y);
 }
 
-TEST(Vec2f, Divide)
+TEST_P(Vec2fOperationFixture, Dot)
 {
-    constexpr float x1 = 1, x2 = 2;
-    constexpr float y1 = 0, y2 = -4;
+  //Defines v1 and v2 with the parameter insert command
+  //The parameter values can be found at the bottom of the code
+	auto       [v1, v2] = GetParam();
 
-    constexpr core::Vec2f v1{x1,x2};
-    constexpr core::Vec2f v2{y1,y2};
+  //Multiples both Vec2f togethers via the function in the header
+	const auto result = core::maths::Vec2f::Dot(v1, v2);
 
-    EXPECT_ANY_THROW({
-      constexpr auto result = v1 / v2;
-      FAIL();
-      });
-/*
-    if(isnan(result.x) || isnan(result.y)){
-      std::cout<<"Is error.";
-      FAIL();
-    }
-
-    static_assert(result.x == x1 / y1);
-    static_assert(result.y == x2 / y2);
-
-    EXPECT_FLOAT_EQ(result.x, x1 / y1);
-    EXPECT_FLOAT_EQ(result.y, x2 / y2);
-*/
+  //Verify if the float values are approximately equal
+	EXPECT_FLOAT_EQ(result, v1.x * v2.x + v1.y * v2.y);
 }
+
+TEST_P(Vec2fOperationFixture, Multi)
+{
+  //Defines v1 and v2 with the parameter insert command
+  //The parameter values can be found at the bottom of the code
+	auto       [v1, v2] = GetParam();
+
+  //Multiple a Vec2f based on only one value from the other Vec2f
+	const auto result = v1 * v2.x;
+	const auto result2 = v1.x * v2;
+
+  //Verify if the float values are approximately equal
+	EXPECT_FLOAT_EQ(result.x, v1.x * v2.x);
+	EXPECT_FLOAT_EQ(result.y, v1.y * v2.x);
+	EXPECT_FLOAT_EQ(result2.x, v1.x * v2.x);
+	EXPECT_FLOAT_EQ(result2.y, v1.x * v2.y);
+
+}
+
+TEST_P(Vec2fOperationFixture, Div)
+{
+  //Defines v1 and v2 with the parameter insert command
+  //The parameter values can be found at the bottom of the code
+	auto [v1, v2] = GetParam();
+
+	auto testDivByComponent = [&](float divisor, const auto& vecA, const auto& vecB)
+	{
+		const auto resA = vecA / divisor;
+		const auto resB = vecB / divisor;
+
+		auto checkInfOrNan = [](const float origVal, const float resVal)
+		{
+			if(origVal != 0.0f)
+				EXPECT_TRUE(std::isinf(resVal));
+			else
+				EXPECT_TRUE(std::isnan(resVal));
+		};
+
+		if(divisor != 0.0f)
+		{
+			EXPECT_FLOAT_EQ(resA.x, vecA.x / divisor);
+			EXPECT_FLOAT_EQ(resA.y, vecA.y / divisor);
+			EXPECT_FLOAT_EQ(resB.x, vecB.x / divisor);
+			EXPECT_FLOAT_EQ(resB.y, vecB.y / divisor);
+		}
+		else
+		{
+			checkInfOrNan(vecA.x, resA.x);
+			checkInfOrNan(vecA.y, resA.y);
+			checkInfOrNan(vecB.x, resB.x);
+			checkInfOrNan(vecB.y, resB.y);
+		}
+	};
+
+	testDivByComponent(v2.x, v1, v2);
+	testDivByComponent(v2.y, v1, v2);
+	testDivByComponent(v1.x, v2, v1);
+	testDivByComponent(v1.y, v2, v1);
+}
+
+
+TEST_P(Vec2fOperationFixture, Perpendicular)
+{
+	auto       [v1, v2] = GetParam();
+	const auto p1 = v1.Perpendicular();
+	const auto p2 = v2.Perpendicular();
+	EXPECT_FLOAT_EQ(core::maths::Vec2f::Dot(v1, p1), 0);
+	EXPECT_FLOAT_EQ(core::maths::Vec2f::Dot(v2, p2), 0);
+
+	const auto r1 = v1.Perpendicular2();
+	const auto r2 = v2.Perpendicular2();
+	EXPECT_FLOAT_EQ(core::maths::Vec2f::Dot(v1, r1), 0);
+	EXPECT_FLOAT_EQ(core::maths::Vec2f::Dot(v2, r2), 0);
+}
+
+TEST_P(Vec2fOperationFixture, Lerp)
+{
+	auto       [v1, v2] = GetParam();
+	const auto result1 = core::maths::Vec2f::Lerp(v1, v2.x);
+	const auto result2 = core::maths::Vec2f::Lerp(v1, v2.y);
+	const auto result3 = core::maths::Vec2f::Lerp(v2, v1.x);
+	const auto result4 = core::maths::Vec2f::Lerp(v2, v1.y);
+	EXPECT_FLOAT_EQ(result1, v1.x * (1 - v2.x) + v1.y * v2.x);
+	EXPECT_FLOAT_EQ(result2, v1.x * (1 - v2.y) + v1.y * v2.y);
+	EXPECT_FLOAT_EQ(result3, v2.x * (1 - v1.x) + v2.y * v1.x);
+	EXPECT_FLOAT_EQ(result4, v2.x * (1 - v1.y) + v2.y * v1.y);
+
+}
+
+TEST_P(Vec2fOperationFixture, Magnitude)
+{
+	auto       [v1, v2] = GetParam();
+	const auto resultv1 = v1.Magnitude();
+	const auto resultv2 = v2.Magnitude();
+	EXPECT_FLOAT_EQ(resultv1, v1.Magnitude());
+	EXPECT_FLOAT_EQ(resultv2, v2.Magnitude());
+}
+
+TEST_P(Vec2fOperationFixture, SquMagnitude)
+{
+	auto       [v1, v2] = GetParam();
+	const auto resultv1 = v1.MagnitudeSqu();
+	const auto resultv2 = v2.MagnitudeSqu();
+	EXPECT_FLOAT_EQ(resultv1, v1.MagnitudeSqu());
+	EXPECT_FLOAT_EQ(resultv2, v2.MagnitudeSqu());
+}
+
+TEST_P(Vec2fOperationFixture, Normalize)
+{
+	auto [v1, v2] = GetParam();
+	auto resultv1 = v1.Normalize();
+	auto resultv2 = v2.Normalize();
+	if(v1.MagnitudeSqu() == 0)
+	{
+		EXPECT_FLOAT_EQ(resultv1.MagnitudeSqu(), 0);
+	}
+	else
+	{
+		EXPECT_FLOAT_EQ(resultv1.MagnitudeSqu(), 1);
+	}
+	if(v2.MagnitudeSqu() == 0)
+	{
+		EXPECT_FLOAT_EQ(resultv2.MagnitudeSqu(), 0);
+	}
+	else
+	{
+		EXPECT_FLOAT_EQ(resultv2.MagnitudeSqu(), 1);
+	}
+}
+
+TEST_P(Vec2fOperationFixture, Rotate)
+{
+	auto [v1, v2] = GetParam();
+
+	const core::maths::Vec2f expected_v1 = {
+		v1.x * std::cos(0.5f) - v1.y * std::sin(0.5f),
+		v1.x * std::sin(0.5f) + v1.y * std::cos(0.5f)
+	};
+
+	const core::maths::Vec2f expected_v2 = {
+		v2.x * std::cos(0.5f) - v2.y * std::sin(0.5f),
+		v2.x * std::sin(0.5f) + v2.y * std::cos(0.5f)
+	};
+
+	v1.Rotate(0.5f);
+	v2.Rotate(0.5f);
+
+	EXPECT_FLOAT_EQ(v1.x, expected_v1.x);
+	EXPECT_FLOAT_EQ(v1.y, expected_v1.y);
+
+	EXPECT_FLOAT_EQ(v2.x, expected_v2.x);
+	EXPECT_FLOAT_EQ(v2.y, expected_v2.y);
+}
+
+//The series of parameter values that will be used throughout the code for the lines using TEST_P
+INSTANTIATE_TEST_SUITE_P(AllNumbers,
+                         Vec2fOperationFixture,
+                         testing::Values(
+	                         std::pair{ core::maths::Vec2f{1.5f,3.2f}, core::maths::Vec2f{2.3f,-4.1f} },
+	                         std::pair{ core::maths::Vec2f{-10.2f, 15.2f}, core::maths::Vec2f{-25.2f, -35.3f} },
+	                         std::pair{ core::maths::Vec2f{0.0f, 0.0f}, core::maths::Vec2f{0.0f, 0.0f} },
+	                         std::pair{ core::maths::Vec2f{0.0f, 1.0f}, core::maths::Vec2f{0.0f, 1.0f} },
+	                         std::pair{ core::maths::Vec2f{1.0f, 0.0f}, core::maths::Vec2f{1.0f, 0.0f} },
+	                         std::pair{ core::maths::Vec2f{}, core::maths::Vec2f{} },
+	                         std::pair{ core::maths::Vec2f{1.2f, 2.1f}, core::maths::Vec2f{} },
+	                         std::pair{ core::maths::Vec2f{}, core::maths::Vec2f{1.2f, 2.1f} }
+                         )
+);

@@ -1,18 +1,20 @@
 #include "game.h"
 
-#include "../../core/include/map_generation.h"
+#include <iostream>
+
 #include "SFML/Graphics.hpp"
+#include "graphics/tilemap.h"
 
 namespace game{
 
 	namespace{
 	  sf::RenderWindow window_;
-	  sf::Texture grass_texture_("../assets/sprites/grass.png");
-	  sf::Sprite sprite(grass_texture_);
+	  TileMap tilemap_;
 
 	  void Setup() {
-	    window_.create(sf::VideoMode({800,600}), "SFML window");
+	    window_.create(sf::VideoMode({kWindowWidth,kWindowHeight}), "SFML window");
 
+	    tilemap_.Setup();
 	  }
 	}
 
@@ -35,7 +37,7 @@ namespace game{
 
 			window_.clear();
 
-			window_.draw(sprite);
+			tilemap_.Draw(window_);
 
 			window_.display();
 		}

@@ -7,15 +7,15 @@
 
 int main() {
 
-  //game::Loop();
-
+  game::Loop();
+/*
   //Setup randomnness
   srand(time(0));
 
   // Window variables
   constexpr int kWindowWidth = 640;
   constexpr int kWindowHeight=480;
-  const int kTileSize=16;
+  constexpr int kTileSize=16;
 
   //PCG Variables
   int walkIterMax=30;
@@ -29,8 +29,8 @@ int main() {
 
   //Tilemap Variables
   std::vector<sf::Vector2f> tilePositions;
-  std::vector<sf::Sprite> tileMap;
   std::vector<sf::Vector2f> grassPositions;
+  std::vector<sf::Sprite> tileMap;
   sf::Vector2f startPosition=sf::Vector2f((numberOfWidthTiles/2)*kTileSize, (numberOfHeightTiles/2)*kTileSize);
 
   //Set up 4 way directions
@@ -149,7 +149,7 @@ int main() {
       }
       fillUp=0;
     }
-  }*/
+  }
 
 //Add sand tiles based if a grass tile is surrounded by empty tile
   for (auto grassPosition : grassPositions) {
@@ -181,4 +181,5 @@ int main() {
   }
 
     return 0;
+  */
 }
