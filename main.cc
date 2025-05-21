@@ -19,8 +19,8 @@ int main() {
 
   //PCG Variables
   int walkIterMax=30;
-  int walkDistanceMin=3;
-  int walkDistanceMax=5;
+  int walkDistanceMin=2;
+  int walkDistanceMax=4;
   int walkBounds=kTileSize*3;
 
   //Set the grid tile size
@@ -33,7 +33,7 @@ int main() {
   std::vector<sf::Vector2f> grassPositions;
   sf::Vector2f startPosition=sf::Vector2f((numberOfWidthTiles/2)*kTileSize, (numberOfHeightTiles/2)*kTileSize);
 
-  //Set up directions
+  //Set up 4 way directions
   std::array<sf::Vector2f, 4> fourWayDirections;
 
   fourWayDirections[0] = sf::Vector2f(kTileSize, 0);
@@ -41,6 +41,7 @@ int main() {
   fourWayDirections[2] = sf::Vector2f(0, kTileSize);
   fourWayDirections[3] = sf::Vector2f(0, -kTileSize);
 
+  //Set up 8 way directions
   std::array<sf::Vector2f, 8> eightWayDirections;
 
   eightWayDirections[0] = sf::Vector2f(kTileSize, 0);
@@ -53,29 +54,33 @@ int main() {
   eightWayDirections[7] = sf::Vector2f(-kTileSize, kTileSize);
 
   //Texture and sprite setup
-  sf::Texture grass_texture_("../assets/sprites/grass.png");
+  sf::Texture grass_texture_("../_assets/sprites/grass.png");
   sf::Sprite grass_sprite_(grass_texture_);
 
-  sf::Texture water_texture_("../assets/sprites/water.png");
+  sf::Texture water_texture_("../_assets/sprites/water.png");
   sf::Sprite water_sprite_(water_texture_);
 
-  sf::Texture flower_texture_("../assets/sprites/flowers.png");
+  sf::Texture flower_texture_("../_assets/sprites/flowers.png");
   sf::Sprite flower_sprite_(flower_texture_);
 
-  //Set up the tile coordinates
+  sf::Texture sand_texture_("../_assets/sprites/sand.png");
+  sf::Sprite sand_sprite_(sand_texture_);
+
+  //Create the positions of the tilemap
   for (int x = 0; x < numberOfWidthTiles; x++) {
     for (int y = 0; y < numberOfHeightTiles; y++) {
       tilePositions.emplace_back(x*kTileSize, y*kTileSize);
     }
   }
 
-  //Drunkard generation
+  //Drunkard generation variables
   int walkAmounts=0;
   int walkDistance;
   sf::Vector2f newGrassSpot;
 
   grassPositions.emplace_back(startPosition);
 
+//Drunkard generation loop
   while (walkAmounts<walkIterMax) {
     sf::Vector2f nextDirection = fourWayDirections[std::rand() % fourWayDirections.size()];
     walkDistance = std::rand() % (walkDistanceMax - walkDistanceMin) + walkDistanceMin;
@@ -113,13 +118,14 @@ int main() {
     grassPositions.emplace_back(newGrassPosition);
   }
 
-  //Create the island
+  //3 - Add the grass positions on the tilemap
   for (auto grassPosition : grassPositions) {
     grass_sprite_.setPosition(grassPosition);
     tileMap.emplace_back(grass_sprite_);
   }
 
   //Fill empty holes
+  /*
   int fillUp=0;
 
   for (auto tilePosition : tilePositions) {
@@ -142,6 +148,16 @@ int main() {
         tileMap.emplace_back(flower_sprite_);
       }
       fillUp=0;
+    }
+  }*/
+
+//Add sand tiles based if a grass tile is surrounded by empty tile
+  for (auto grassPosition : grassPositions) {
+    for (auto direction : fourWayDirections) {
+      if (std::find(grassPositions.begin(), grassPositions.end(), grassPosition+direction) == grassPositions.end()) {
+        sand_sprite_.setPosition(grassPosition);
+        tileMap.emplace_back(sand_sprite_);
+      }
     }
   }
 
