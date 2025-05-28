@@ -21,12 +21,8 @@ TEST_P(AngleOperationFixture, ConversionIntoRadian) {
   // Transform the radian result into float to test the result
   const auto result = (static_cast<float>(float_radian_result));
 
-  //Converts the degree into a radian and converts to a float value
-  //const auto float_radian_result = core::Cos(static_cast<core::Radian>(test_degree));
-  //std::cout << float_result << " and " << std::cos((core::Pi/4.0f)*numberOfRadians) << std::endl;
 
   //Verify if the degree conversion into radian worked
-  //Multiply by the number of radians to be expected
   EXPECT_FLOAT_EQ(result, test_value*(core::Pi/180.0f));
 }
 
@@ -47,6 +43,54 @@ TEST_P(AngleOperationFixture, ConversionIntoDegree) {
 
   //Verify if the radian conversion into degree worked
   EXPECT_FLOAT_EQ(result, test_value*(180.0f/core::Pi));
+}
+
+TEST_P(AngleOperationFixture, ACos) {
+
+  //Defines v1 and v2 with the parameter insert command
+  //The parameter values can be found at the bottom of the code
+  const auto test_value = GetParam();
+
+  //Makes the float value into a radian
+  const core::Radian test_radian{test_value};
+
+  //Converts the radian into a float value
+  const auto result = ACos(test_radian);
+
+  //Verify if acos worked
+  EXPECT_FLOAT_EQ(result, -std::cos(static_cast<float>(test_value)));
+}
+
+TEST_P(AngleOperationFixture, ASin) {
+
+  //Defines v1 and v2 with the parameter insert command
+  //The parameter values can be found at the bottom of the code
+  const auto test_value = GetParam();
+
+  //Makes the float value into a radian
+  const core::Radian test_radian{test_value};
+
+  //Converts the radian into a float value
+  const auto result = ASin(test_radian);
+
+  //Verify if asin worked
+  EXPECT_FLOAT_EQ(result, -std::sin(static_cast<float>(test_value)));
+}
+
+TEST_P(AngleOperationFixture, Atan) {
+
+  //Defines v1 and v2 with the parameter insert command
+  //The parameter values can be found at the bottom of the code
+  const auto test_value = GetParam();
+
+  //Makes the float value into a radian
+  const core::Radian test_radian{test_value};
+
+  //Converts the radian into a float value
+  const auto result = Atan(test_radian);
+
+  //Verify if atan worked
+  EXPECT_FLOAT_EQ(result, -std::tan(static_cast<float>(test_value)));
 }
 
 INSTANTIATE_TEST_SUITE_P(AllNumbers,

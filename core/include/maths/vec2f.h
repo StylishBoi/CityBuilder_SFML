@@ -116,6 +116,27 @@ namespace core::maths
           //Return the vec2f using the division function and dividing by the magnitude
             return *this / man;
         }
+
+        Vec2f Rotate(const float angle)
+        {
+          const float c = std::cos(angle);
+          const float s = std::sin(angle);
+          const float new_x = c * x - s * y;
+          const float new_y = s * x + c * y;
+          x = new_x;
+          y = new_y;
+
+          return {x, y};
+        }
+
+        [[nodiscard]] float MiddleAngle(const Vec2f other) const
+        {
+          auto dot = (x*other.x) + (y*other.y);      // Dot product between [x1, y1] and [x2, y2]
+          auto det = (x*other.y) - (y*other.x) ;     // Determinant
+          auto result_angle = atan2(det, dot);  // atan2(y, x) or atan2(sin, cos)
+
+          return result_angle;
+        }
     }; // struct Vec2i
 } // namespace core
 

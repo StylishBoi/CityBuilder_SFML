@@ -224,6 +224,54 @@ TEST_P(Vec2fOperationFixture, Normalize)
 	}
 }
 
+TEST_P(Vec2fOperationFixture, Rotate) {
+  //Defines v1 and v2 with the parameter insert command
+  //The parameter values can be found at the bottom of the code
+  auto [v1, v2] = GetParam();
+
+  const core::maths::Vec2f expected_v1 = {
+    v1.x * std::cos(0.5f) - v1.y * std::sin(0.5f),
+    v1.x * std::sin(0.5f) + v1.y * std::cos(0.5f)
+};
+
+  const core::maths::Vec2f expected_v2 = {
+    v2.x * std::cos(0.5f) - v2.y * std::sin(0.5f),
+    v2.x * std::sin(0.5f) + v2.y * std::cos(0.5f)
+};
+
+  v1.Rotate(0.5f);
+  v2.Rotate(0.5f);
+
+  //Verify if the float values are approximately equal
+  EXPECT_FLOAT_EQ(v1.x, expected_v1.x);
+  EXPECT_FLOAT_EQ(v1.y, expected_v1.y);
+
+  //Verify if the float values are approximately equal
+  EXPECT_FLOAT_EQ(v2.x, expected_v2.x);
+  EXPECT_FLOAT_EQ(v2.y, expected_v2.y);
+}
+
+TEST_P(Vec2fOperationFixture, MiddleAngle) {
+  //Defines v1 and v2 with the parameter insert command
+  //The parameter values can be found at the bottom of the code
+  auto [v1, v2] = GetParam();
+
+  //Find the middle angle for both vectors using a function
+  const auto angle1 = v1.MiddleAngle(v2);
+  const auto angle2 = v2.MiddleAngle(v1);
+
+  const float expected_angle1={
+    atan2(((v1.x*v2.y) - (v1.y*v2.x)), ((v1.x*v2.x) + (v1.y*v2.y)))
+  };
+  const float expected_angle2={
+    atan2(((v2.x*v1.y) - (v2.y*v1.x)), ((v2.x*v1.x) + (v2.y*v1.y)))
+  };
+
+  //Verify if the float values are approximately equal
+  EXPECT_FLOAT_EQ(angle1, expected_angle1);
+  EXPECT_FLOAT_EQ(angle2, expected_angle2);
+}
+
 //The series of parameter values that will be used throughout the code for the lines using TEST_P
 INSTANTIATE_TEST_SUITE_P(AllNumbers,
                          Vec2fOperationFixture,
