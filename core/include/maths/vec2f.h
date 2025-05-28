@@ -1,5 +1,5 @@
-#ifndef VEC2F_H
-#define VEC2F_H
+#ifndef CORE_MATHS_VEC2F_H
+#define CORE_MATHS_VEC2F_H
 
 #include <complex>
 #include <iostream>

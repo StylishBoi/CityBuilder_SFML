@@ -3,7 +3,7 @@
 
 #include "maths/const.h"
 
-namespace core::maths {
+namespace core {
 //States/Initializes the class beforehand so it can be used within radian without causing an error
 class Degree;
 class Radian {
@@ -26,7 +26,7 @@ public:
   //Needs to be explicit and state that it is float
   constexpr explicit Degree(float value): degree_value_(value){}
   //No need to be explicit if the value is already a radian
-  constexpr Degree(const Radian& angle): degree_value_(static_cast<float>(angle)/Pi*180.0f) {}
+  constexpr Degree(const Radian& angle);
 
   //Converts the degree into a float value
   explicit constexpr operator float() const { return degree_value_; }
@@ -38,7 +38,12 @@ private:
 
 
 constexpr Radian::Radian(const Degree& angle)
-    : radian_value_(static_cast<float>(angle) / 180.0f * Pi) {}
+//Converts the degree into a radian value
+    : radian_value_(static_cast<float>(angle) * (Pi / 180.0f)) {}
+
+constexpr Degree::Degree(const Radian& angle)
+//Converts the radian into a degree value
+    : degree_value_(static_cast<float>(angle)*(180.0f / Pi)) {}
 }
 
 #endif
