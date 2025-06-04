@@ -6,16 +6,11 @@
 #include "map_generation.h"
 
 int main() {
-
   game::Loop();
+}
 /*
   //Setup randomnness
   srand(time(0));
-
-  // Window variables
-  constexpr int kWindowWidth = 640;
-  constexpr int kWindowHeight=480;
-  constexpr int kTileSize=16;
 
   //PCG Variables
   int walkIterMax=30;
@@ -27,44 +22,7 @@ int main() {
   constexpr int numberOfWidthTiles = static_cast<int>(kWindowWidth)/kTileSize;
   constexpr int numberOfHeightTiles = static_cast<int>(kWindowHeight)/kTileSize;
 
-  //Tilemap Variables
-  std::vector<sf::Vector2f> tilePositions;
-  std::vector<sf::Vector2f> grassPositions;
-  std::vector<sf::Sprite> tileMap;
   sf::Vector2f startPosition=sf::Vector2f((numberOfWidthTiles/2)*kTileSize, (numberOfHeightTiles/2)*kTileSize);
-
-  //Set up 4 way directions
-  std::array<sf::Vector2f, 4> fourWayDirections;
-
-  fourWayDirections[0] = sf::Vector2f(kTileSize, 0);
-  fourWayDirections[1] = sf::Vector2f(-kTileSize, 0);
-  fourWayDirections[2] = sf::Vector2f(0, kTileSize);
-  fourWayDirections[3] = sf::Vector2f(0, -kTileSize);
-
-  //Set up 8 way directions
-  std::array<sf::Vector2f, 8> eightWayDirections;
-
-  eightWayDirections[0] = sf::Vector2f(kTileSize, 0);
-  eightWayDirections[1] = sf::Vector2f(-kTileSize, 0);
-  eightWayDirections[2] = sf::Vector2f(0, kTileSize);
-  eightWayDirections[3] = sf::Vector2f(0, -kTileSize);
-  eightWayDirections[4] = sf::Vector2f(kTileSize, kTileSize);
-  eightWayDirections[5] = sf::Vector2f(-kTileSize, -kTileSize);
-  eightWayDirections[6] = sf::Vector2f(kTileSize, -kTileSize);
-  eightWayDirections[7] = sf::Vector2f(-kTileSize, kTileSize);
-
-  //Texture and sprite setup
-  sf::Texture grass_texture_("../_assets/sprites/grass.png");
-  sf::Sprite grass_sprite_(grass_texture_);
-
-  sf::Texture water_texture_("../_assets/sprites/water.png");
-  sf::Sprite water_sprite_(water_texture_);
-
-  sf::Texture flower_texture_("../_assets/sprites/flowers.png");
-  sf::Sprite flower_sprite_(flower_texture_);
-
-  sf::Texture sand_texture_("../_assets/sprites/sand.png");
-  sf::Sprite sand_sprite_(sand_texture_);
 
   //Create the positions of the tilemap
   for (int x = 0; x < numberOfWidthTiles; x++) {
@@ -160,26 +118,4 @@ int main() {
       }
     }
   }
-
-  //Display screen
-  sf::RenderWindow window(sf::VideoMode({kWindowWidth, kWindowHeight}), "City Builder");
-
-  while (window.isOpen()){
-    while (std::optional event = window.pollEvent()) {
-      if (event->is<sf::Event::Closed>()) {
-        window.close();
-      }
-    }
-    window.clear();
-
-    //Draws the tilemap
-    for (const auto& tile : tileMap) {
-      window.draw(tile);
-    }
-
-    window.display();
-  }
-
-    return 0;
-  */
-}
+}*/
