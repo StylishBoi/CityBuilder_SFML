@@ -1,9 +1,4 @@
-#include <iostream>
-#include <random>
-
-#include "SFML/Graphics.hpp"
-#include "game.h"
-#include "map_generation.h"
+#include "D:/Module 4/NewCityBuilder/game/include/game.h"
 
 int main() {
   game::Loop();

@@ -2,45 +2,40 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <iostream>
-#include "map_generation.h"
 
-TileMap::TileMap() : textures("../_assets/sprites/"){
-}
+#include "graphics/directions.h"
+#include "graphics/map_generation.h"
+
+TileMap::TileMap(){}
+
+MapGeneration map_generation;
+Directions directions;
 
 void TileMap::Setup(){
+  directions.Setup();
+  textures.LoadAssets(files);
+  tiles_.fill(Tile::kWater);
 
-  textures.LoadAssets();
-  tiles_.fill(Tile::WATER);
+  auto grassSpots=map_generation.MapGeneration::Drunkard();
 
+  for (auto grass : grassSpots) {
+    tiles_[((grass.x%+grass.y)%40)*kTileSize]=Tile::kGrass;
+  }
+  tiles_[0]=Tile::kGrass;
+  tiles_[39]=Tile::kGrass;
+  tiles_[1549]=Tile::kGrass;
+  tiles_[1599]=Tile::kGrass;
+  std::cout<<tiles_.size()<<std::endl;
 }
 
 void TileMap::Draw(sf::RenderWindow &window){
   int tileIndex=0;
 
-  sf::Sprite sprite(textures.GetAsset(AssetManager<sf::Texture>::TextureIndex::kDefault));
+  sf::Sprite sprite(textures.GetAsset(Tile::kGrass));
 
-  for (auto tile: tiles_) {
+  for (auto element: tiles_) {
 
-  //Decide the sprite of the tile
-    switch (tile) {
-      case Tile::WATER:
-        sprite.setTexture(textures.GetAsset(AssetManager<sf::Texture>::TextureIndex::kWater));
-        break;
-      case Tile::GRASS:
-        sprite.setTexture(textures.GetAsset(AssetManager<sf::Texture>::TextureIndex::kGrass));
-        break;
-      case Tile::FLOWERS:
-        sprite.setTexture(textures.GetAsset(AssetManager<sf::Texture>::TextureIndex::kFlowers));
-        break;
-      case Tile::SAND:
-        sprite.setTexture(textures.GetAsset(AssetManager<sf::Texture>::TextureIndex::kSand));
-        break;
-      default:
-        sprite.setTexture(textures.GetAsset(AssetManager<sf::Texture>::TextureIndex::kWater));
-        break;
-
-    }
+    sprite.setTexture(textures.GetAsset(element));
     sprite.setPosition(ScreenPosition(tileIndex));
     window.draw(sprite);
 

@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "SFML/Graphics.hpp"
+#include "ai/npc.h"
 #include "graphics/tilemap.h"
 
 namespace game{
@@ -10,6 +11,7 @@ namespace game{
 	namespace{
 	  sf::RenderWindow window_;
 	  TileMap tilemap_;
+	  Npc npc_;
 
 	  void Setup() {
 	    window_.create(sf::VideoMode({kWindowWidth,kWindowHeight}), "SFML window");
@@ -37,6 +39,7 @@ namespace game{
 
 			window_.clear();
 
+		        npc_.Draw(window_);
 			tilemap_.Draw(window_);
 
 			window_.display();

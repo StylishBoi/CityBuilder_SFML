@@ -22,8 +22,7 @@ add_subdirectory(game/)
 file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/_assets")
 file(COPY ${CMAKE_SOURCE_DIR}/_assets DESTINATION ${CMAKE_BINARY_DIR})
 
-add_executable(CityBuilder main.cc
-)
+add_executable(CityBuilder main.cc)
 
 target_link_libraries(CityBuilder PRIVATE game)
 
