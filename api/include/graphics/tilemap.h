@@ -5,11 +5,12 @@
 #include "assets/asset_manager.h"
 
 // Window variables
-constexpr int kWindowWidth = 640;
-constexpr int kWindowHeight=480;
-constexpr int kTileSize=16;
+constexpr static int kWindowWidth = 640;
+constexpr static int kWindowHeight=480;
+constexpr static int kTileSize=16;
 
-class TileMap{
+class Tilemap{
+public:
   enum class Tile {
     GRASS,
     WATER,
@@ -25,7 +26,7 @@ private:
   static int Index(sf::Vector2f screenPosition);
 
 public:
-  explicit TileMap();
+  explicit Tilemap();
   void Setup();
   void Draw(sf::RenderWindow &window);
 };

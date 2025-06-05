@@ -1,9 +1,10 @@
+#include "directions.h"
+
 #include <iostream>
 #include <random>
 
+#include "../../api/include/graphics/tilemap.h"
 #include "SFML/Graphics.hpp"
-#include "directions.h"
-
 
 void Directions::Setup(){
 

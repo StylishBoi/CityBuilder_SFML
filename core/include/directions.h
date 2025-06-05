@@ -5,13 +5,10 @@
 
 class Directions{
 
-private:
-  constexpr int kTileSize=16;
-
 public:
-  std::array<sf::Vector2f, 4> fourWayDirections;
+  static std::array<sf::Vector2f, 4> fourWayDirections;
 
-  std::array<sf::Vector2f, 8> eightWayDirections;
+  static std::array<sf::Vector2f, 8> eightWayDirections;
 
   void Setup();
 };

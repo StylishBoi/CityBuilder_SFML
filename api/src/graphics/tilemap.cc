@@ -1,8 +1,9 @@
 #include "graphics/tilemap.h"
 
-#include <iostream>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <iostream>
+#include "map_generation.h"
 
 TileMap::TileMap() : textures("../_assets/sprites/"){
 }
@@ -10,7 +11,8 @@ TileMap::TileMap() : textures("../_assets/sprites/"){
 void TileMap::Setup(){
 
   textures.LoadAssets();
-  tiles_.fill(Tile::GRASS);
+  tiles_.fill(Tile::WATER);
+
 }
 
 void TileMap::Draw(sf::RenderWindow &window){
