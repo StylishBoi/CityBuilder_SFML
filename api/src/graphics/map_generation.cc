@@ -76,6 +76,7 @@ std::vector<int> MapGeneration::MapThickening() {
       newPositions.push_back(usedTile+direction);
     }
   }
+  //Converts coordinates into tile position
   for (auto newPosition : newPositions) {
     returnPositions.push_back((newPosition.x/kTileSize)+((newPosition.y/kTileSize)*40));
     usedTiles.push_back(newPosition);
@@ -109,6 +110,7 @@ std::vector<int> MapGeneration::HoleFilling() {
       fillUp=0;
     }
   }
+  //Converts coordinates into tile position
   for (auto newPosition : newPositions) {
     returnPositions.push_back((newPosition.x/kTileSize)+((newPosition.y/kTileSize)*40));
     usedTiles.push_back(newPosition);
