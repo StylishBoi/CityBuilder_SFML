@@ -8,7 +8,7 @@ private:
   //PCG Generation
   int walkIterMax=30;
   int walkDistanceMin=4;
-  int walkDistanceMax=8;
+  int walkDistanceMax=7;
   int walkBounds=kTileSize*3;
   std::vector<sf::Vector2i> usedTiles;
 
@@ -19,6 +19,7 @@ private:
 public:
   std::array<int, 150> Drunkard();
   std::vector<int> MapThickening();
+  std::vector<int> HoleFilling();
   std::vector<int> SandUpdate();
 
 private:

@@ -13,13 +13,13 @@ namespace game{
 	  sf::Clock clock_;
 	  TileMap tilemap_;
 
-	  api::ai::Npc npc_;
+	  //api::ai::Npc npc_;
 
 	  void Setup() {
 	    window_.create(sf::VideoMode({kWindowWidth,kWindowHeight}), "SFML window");
 
 	    tilemap_.Setup();
-	    npc_.Setup();
+	    //npc_.Setup();
 	  }
 	}
 
@@ -43,11 +43,11 @@ namespace game{
 				}
 			}
 
-		        npc_.Update(deltaTime);
+		        //npc_.Update(deltaTime);
 
 			window_.clear();
 
-		        npc_.Draw(window_);
+		        //npc_.Draw(window_);
 			tilemap_.Draw(window_);
 
 			window_.display();

@@ -82,8 +82,12 @@ void Npc::Setup() {
 
 
 void Npc::Update(float dt) {
-  std::cout<<"Hunger : "<<hunger_<<std::endl;
   motor_.Update(dt);
+  if (motor_.RemainingDistance()<=0.001f) {
+    motor_.SetDestination(path_.GetNextPoint());
+  }
+
+  std::cout<<"Hunger : "<<hunger_<<std::endl;
   root_->Tick();
 }
 

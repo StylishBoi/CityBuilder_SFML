@@ -16,16 +16,24 @@ void TileMap::Setup(){
   textures.LoadAssets(files);
   tiles_.fill(Tile::kWater);
 
+  //Sets up the grass island
   auto grassSpots=map_generation.Drunkard();
   for (auto grass : grassSpots) {
     tiles_[grass]=Tile::kGrass;
   }
 
+  //Increase the size of the island
   auto newPositions=map_generation.MapThickening();
   for (auto newPosition : newPositions) {
     tiles_[newPosition]=Tile::kGrass;
   }
 
+  //Fill up potential holes on the island
+  auto holePositions=map_generation.HoleFilling();
+  for (auto holePosition : holePositions) {
+    tiles_[holePosition]=Tile::kFlowers;
+  }
+  //Adds sand to the island
   auto sandPositions=map_generation.SandUpdate();
   for (auto sandPosition : sandPositions) {
     tiles_[sandPosition]=Tile::kSand;
