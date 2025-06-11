@@ -16,16 +16,20 @@ void TileMap::Setup(){
   textures.LoadAssets(files);
   tiles_.fill(Tile::kWater);
 
-  auto grassSpots=map_generation.MapGeneration::Drunkard();
-
+  auto grassSpots=map_generation.Drunkard();
   for (auto grass : grassSpots) {
-    tiles_[((grass.x%+grass.y)%40)*kTileSize]=Tile::kGrass;
+    tiles_[grass]=Tile::kGrass;
   }
-  tiles_[0]=Tile::kGrass;
-  tiles_[39]=Tile::kGrass;
-  tiles_[1549]=Tile::kGrass;
-  tiles_[1599]=Tile::kGrass;
-  std::cout<<tiles_.size()<<std::endl;
+
+  auto newPositions=map_generation.MapThickening();
+  for (auto newPosition : newPositions) {
+    tiles_[newPosition]=Tile::kGrass;
+  }
+
+  auto sandPositions=map_generation.SandUpdate();
+  for (auto sandPosition : sandPositions) {
+    tiles_[sandPosition]=Tile::kSand;
+  }
 }
 
 void TileMap::Draw(sf::RenderWindow &window){
@@ -35,9 +39,18 @@ void TileMap::Draw(sf::RenderWindow &window){
 
   for (auto element: tiles_) {
 
-    sprite.setTexture(textures.GetAsset(element));
     sprite.setPosition(ScreenPosition(tileIndex));
-    window.draw(sprite);
+
+    if (element==Tile::kNpc || element==Tile::kFood || element==Tile::kRock) {
+      sprite.setTexture(textures.GetAsset(Tile::kGrass));
+      window.draw(sprite);
+      sprite.setTexture(textures.GetAsset(element));
+      window.draw(sprite);
+    }
+    else {
+      sprite.setTexture(textures.GetAsset(element));
+      window.draw(sprite);
+    }
 
     tileIndex++;
   }

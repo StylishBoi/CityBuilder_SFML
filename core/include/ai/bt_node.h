@@ -12,6 +12,7 @@ namespace core::ai{
 
     class Node {
       public:
+      //Virtual means an action that will be redefined in a derived class
         virtual void Reset()=0;
         virtual Status Tick()=0;
 

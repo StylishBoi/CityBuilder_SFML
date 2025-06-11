@@ -1,23 +1,15 @@
 #ifndef BT_SELECTOR_H
 #define BT_SELECTOR_H
 
-#include <memory>
-#include <vector>
-
-#include "bt_node.h"
+#include "bt_composite.h"
 
 namespace core::ai {
   namespace behaviour_tree {
 
-    class Selector : public Node {
-      std::vector<std::unique_ptr<Node>> children_;
-      int childIdx_=0;
+    class Selector : public Composite {
 
     public:
-      void Reset() override;
       Status Tick() override;
-
-      void AddChild(std::unique_ptr<Node> child);
     };
   }
 }

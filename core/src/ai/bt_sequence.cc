@@ -1,16 +1,17 @@
-#include "../../include/ai/bt_selector.h"
+#include "../../include/ai/bt_sequence.h"
 
 using namespace core::ai::behaviour_tree;
 
-Status Selector::Tick() {
+
+Status Sequence::Tick() {
 
   while (childIdx_<children_.size()) {
     Status status = children_[childIdx_]->Tick();
 
     switch (status) {
-      case Status::kSuccess:
+      case Status::kFailure:
         Reset();
-        return Status::kSuccess;
+        return Status::kFailure;
 
       case Status::kRunning:
         return Status::kRunning;
@@ -19,5 +20,6 @@ Status Selector::Tick() {
         childIdx_++;
     }
   }
-  return Status::kFailure;
+  Reset();
+  return Status::kSuccess;
 }

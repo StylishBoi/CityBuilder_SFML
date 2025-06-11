@@ -6,17 +6,20 @@ class MapGeneration
 {
 private:
   //PCG Generation
-  int walkIterMax=50;
+  int walkIterMax=30;
   int walkDistanceMin=4;
   int walkDistanceMax=8;
   int walkBounds=kTileSize*3;
+  std::vector<sf::Vector2i> usedTiles;
 
   //Set the grid tile size
   int numberOfWidthTiles = static_cast<int>(kWindowWidth/kTileSize);
   int numberOfHeightTiles = static_cast<int>(kWindowHeight/kTileSize);
 
 public:
-  std::vector<sf::Vector2i> Drunkard();
+  std::array<int, 150> Drunkard();
+  std::vector<int> MapThickening();
+  std::vector<int> SandUpdate();
 
 private:
 
