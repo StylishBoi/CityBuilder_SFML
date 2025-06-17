@@ -2,76 +2,77 @@
 #include "graphics/tilemap.h"
 #include "graphics/directions.h"
 
+#include <unordered_set>
 #include <random>
 #include <vector>
 
-
 std::array<int, 150> MapGeneration::Drunkard() {
-  //Drunkard generation variables
+    std::array<int, 150> grassPositions;
+    grassPositions.fill(-1);  // Initialize all elements to -1
 
-  //Setup randomness
-  std::random_device rd;
-  std::mt19937 gen(rd());
+    int currentIter = 0;
+    int tilesConvertedToGrass = 0;
 
+    // Move random generator initialization outside the loop
+    std::random_device rd;
+    std::mt19937 gen(rd());
 
-  std::array<int, 150>grassPositions={};
-  int currentIter=0;
-  int tilesConvertedToGrass=0;
+    sf::Vector2i newGrassSpot{320, 240};
 
-  std::vector<sf::Vector2i> generationPositions;
+    // Add first position
+    grassPositions[0] = (320/kTileSize) + ((240/kTileSize)*40);
+    tilesConvertedToGrass = 1;
+    usedTiles.push_back(newGrassSpot);
 
-  std::cout<<numberOfHeightTiles<<std::endl;
-  std::cout<<numberOfWidthTiles<<std::endl;
+    try {
+        while (currentIter < walkIterMax && tilesConvertedToGrass < 150) {
+            std::uniform_int_distribution<> dirDist(0, Directions::fourWayDirections.size() - 1);
+            auto dirIndex = dirDist(gen);
 
-  //Sets up the start
-  sf::Vector2i newGrassSpot={320, 240};
+            // Add bounds check for direction index
+            if (dirIndex < 0 || dirIndex >= Directions::fourWayDirections.size()) {
+                std::cout << "Invalid direction index: " << dirIndex << std::endl;
+                continue;
+            }
 
-  //Drunkard generation loop
-  while (currentIter<walkIterMax) {
-    //Decides next direction
-    std::uniform_int_distribution<> dirDist(0, Directions::fourWayDirections.size() - 1);
-    sf::Vector2i nextDirection = Directions::fourWayDirections[dirDist(gen)];
+            sf::Vector2i nextDirection = Directions::fourWayDirections[dirIndex];
+            std::uniform_int_distribution<> walkDist(walkDistanceMin, walkDistanceMax - 1);
+            int distanceToWalk = walkDist(gen);
 
-    //Decides the distance to walk
-    std::uniform_int_distribution<> walkDist(walkDistanceMin, walkDistanceMax - 1);
-    int distanceToWalk = walkDist(gen);
+            for (int walk = 0; walk < distanceToWalk && tilesConvertedToGrass < 150; walk++) {
+                newGrassSpot += nextDirection;
 
-    generationPositions.clear();
+                if (newGrassSpot.x > (kWindowWidth - walkBounds) ||
+                    newGrassSpot.x < walkBounds ||
+                    newGrassSpot.y > (kWindowHeight - walkBounds) ||
+                    newGrassSpot.y < walkBounds) {
+                    newGrassSpot = {320, 240};
+                    continue;
+                }
 
-    //----------------Walk amount of given steps----------------------
-    for (int walk = 0; walk < distanceToWalk; walk++) {
-      newGrassSpot=newGrassSpot+nextDirection;
-      std::cout<< newGrassSpot.x << " and " << newGrassSpot.y << std::endl;
+                // Calculate tile index
+                int tileIndex = (newGrassSpot.x/kTileSize) + ((newGrassSpot.y/kTileSize)*40);
 
-      //----------------BOUNDS LIMITS----------------------
-      if (newGrassSpot.x > (kWindowWidth - walkBounds) ||
-          newGrassSpot.x < walkBounds ||
-          newGrassSpot.y >(kWindowHeight-walkBounds)
-        || newGrassSpot.y<walkBounds) {
-        std::cout<<"Out of bounds attempt"<<std::endl;
-        newGrassSpot={320, 240};
-      }
+                // Validate tile index
+                if (tileIndex < 0 || tileIndex >= 1600) {  // 40x40 grid = 1600 max tiles
+                    std::cout << "Invalid tile index calculated: " << tileIndex << std::endl;
+                    continue;
+                }
 
-      //----------------Register that loop of steps----------------------
-      usedTiles.push_back(newGrassSpot);
-      generationPositions.push_back(newGrassSpot);
+                if (tilesConvertedToGrass < 150) {
+                    grassPositions[tilesConvertedToGrass++] = tileIndex;
+                    usedTiles.push_back(newGrassSpot);
+                }
+            }
+
+            currentIter++;
+        }
     }
-    //----------------Register all the steps of that loop----------------------
-    for (auto step : generationPositions) {
-      if (tilesConvertedToGrass >= 150) {
-        break;
-      }
-      grassPositions[tilesConvertedToGrass++]=(step.x/kTileSize)+((step.y/kTileSize)*40);
-    }
-    //----------------Reset that loop number of steps----------------------
-    if (!generationPositions.empty()) {
-      newGrassSpot=generationPositions.back();
+    catch (const std::exception& e) {
+        std::cout << "Exception caught: " << e.what() << std::endl;
     }
 
-    //Increase the amount of iter
-    currentIter++;
-  }
-  return grassPositions;
+    return grassPositions;
 }
 
 std::vector<int> MapGeneration::MapThickening() {
@@ -161,11 +162,32 @@ std::vector<int> MapGeneration::HoleFilling() {
 
 std::vector<int> MapGeneration::SandUpdate() {
   std::vector<int> returnPositions;
-  for (auto usedTile : usedTiles) {
-    for (auto direction : Directions::eightWayDirections) {
-      if (std::find(usedTiles.begin(), usedTiles.end(), usedTile+direction) == usedTiles.end()) {
-        returnPositions.push_back((usedTile.x/kTileSize)+((usedTile.y/kTileSize)*40));
-      }
+  std::unordered_set<int> addedPositions;  // To prevent duplicates
+
+  for (const auto& usedTile : usedTiles) {
+    for (const auto& direction : Directions::eightWayDirections) {
+      sf::Vector2i neighborTile = usedTile + direction;
+
+      // Check bounds
+      if (neighborTile.x >= walkBounds &&
+          neighborTile.x < (kWindowWidth - walkBounds) &&
+          neighborTile.y >= walkBounds &&
+          neighborTile.y < (kWindowHeight - walkBounds)) {
+
+        // Check if this neighbor is not a grass tile
+        if (std::find(usedTiles.begin(), usedTiles.end(), neighborTile) == usedTiles.end()) {
+          // Calculate tile index
+          int tileIndex = (usedTile.x/kTileSize) + ((usedTile.y/kTileSize)*40);
+
+          // Validate tile index
+          if (tileIndex >= 0 && tileIndex < 1600 && // 40x40 grid = 1600 max tiles
+              addedPositions.find(tileIndex) == addedPositions.end()) {
+
+            returnPositions.push_back(tileIndex);
+            addedPositions.insert(tileIndex);
+              }
+        }
+          }
     }
   }
   return returnPositions;

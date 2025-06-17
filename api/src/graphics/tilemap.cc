@@ -30,7 +30,7 @@ void TileMap::Setup(){
   //Load the assets and fill the terrain with water
   directions.Setup();
   textures.LoadAssets(files);
-  tiles_.fill(Tile::kWater);
+  tiles_.fill(Tile::kGrass);
 
   //Sets up the grass island
   /*auto grassSpots=map_generation.Drunkard();

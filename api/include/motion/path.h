@@ -1,22 +1,23 @@
 #ifndef PATH_H
 #define PATH_H
-#include <SFML/System/Vector2.hpp>
 #include <vector>
+#include <SFML/System/Vector2.hpp>
 
 namespace api::motion {
-  class Path {
-    int idxPoint_=0;
-    //Vector which will intake all the coordinates of the path
-    std::vector<sf::Vector2f> pathPoints_;
 
-  public:
-    [[nodiscard]] bool IsDone() const;
-    [[nodiscard]] bool IsValid() const;
-    [[nodiscard]] sf::Vector2f GetNextPoint();
-    [[nodiscard]] sf::Vector2f StartPoint() const;
+class Path {
+  int idxPoint_ = 0;
+  std::vector<sf::Vector2f> pathPoints_;
 
-    void Fill(std::vector<sf::Vector2f>& pathPoints);
-  };
+public:
+  [[nodiscard]] bool IsDone() const;
+  [[nodiscard]] bool IsValid() const;
+  [[nodiscard]] sf::Vector2f GetNextPoint();
+  [[nodiscard]] sf::Vector2f StartPoint() const;
+
+  void Fill(std::vector<sf::Vector2f>& path_points);
+
+};
 }
 
 #endif //PATH_H

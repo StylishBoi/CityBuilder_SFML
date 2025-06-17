@@ -15,15 +15,13 @@ namespace api::motion {
             float h;
             float f;
 
-            size_t previous_index;
-            bool has_previous;
+            aStarNode *previous_node;
 
-            aStarNode(sf::Vector2f position, float g, float h, size_t prev_idx=0, bool has_prev=false) : position(position),
+            aStarNode(sf::Vector2f position, float g, float h, aStarNode *prev) : position(position),
                 g(g),
                 h(h),
                 f(g + h),
-                previous_index(prev_idx),
-                has_previous(has_prev){
+                previous_node(prev){
             }
 
             // A Star node are prioritize by the lowest f value
@@ -47,87 +45,89 @@ namespace api::motion {
             return neighbours;
         }
 
-        Path ReconstitutePath(const std::vector<aStarNode>& nodes, size_t final_node_index) {
-          Path path;
-          std::vector<sf::Vector2f> pathPoints;
-          size_t current_index = final_node_index;
-          const aStarNode* current_node = &nodes[current_index];
+        Path ReconstitutePath(aStarNode &start_node){
+            Path path;
+            std::vector<sf::Vector2f> pathPoints;
+            aStarNode *current_node = &start_node;
 
-          while (current_node->has_previous) {
-            pathPoints.emplace_back(current_node->position);
-            current_index = current_node->previous_index;
-            current_node = &nodes[current_index];
-          }
-          pathPoints.emplace_back(current_node->position);
-
-          std::reverse(pathPoints.begin(), pathPoints.end());
-          path.Fill(pathPoints);
-          return path;
-        }
-
-    Path GetPath(const int gridStep, sf::Vector2f start, sf::Vector2f end,
-             std::vector<sf::Vector2f> walkableTiles) {
-    Path aStarPath;
-
-    // Are start / end point in walkables tiles ?
-    auto f = std::find(walkableTiles.begin(), walkableTiles.end(), start);
-    if (f == walkableTiles.end()) {
-        std::cout << "Start point not in walkable tiles" << std::endl;
-        return aStarPath;
-    }
-
-    auto g = std::find(walkableTiles.begin(), walkableTiles.end(), end);
-    if (g == walkableTiles.end()) {
-        std::cout << "End point not in walkable tiles" << std::endl;
-        return aStarPath;
-    }
-
-    std::vector<aStarNode> allNodes;
-    allNodes.reserve(walkableTiles.size() * 4);  // Reserve more space
-
-    std::priority_queue<std::pair<float, size_t>> openList;
-    std::vector<bool> inClosedList(walkableTiles.size() * 4, false);  // Increase size
-    std::vector<bool> explored(walkableTiles.size(), false);  // Track explored tiles
-
-    // Add start node
-    allNodes.emplace_back(start, 0, heuristic(start, end));
-    openList.push({0, 0});
-
-    while (!openList.empty()) {
-        size_t current_index = openList.top().second;
-        aStarNode& currentNode = allNodes[current_index];
-        openList.pop();
-
-        if (currentNode.position == end) {
-            return ReconstitutePath(allNodes, current_index);
-        }
-
-        if (inClosedList[current_index]) continue;
-        inClosedList[current_index] = true;
-
-        for (const auto& neighbour : neighbours(gridStep)) {
-            sf::Vector2f newPosition = currentNode.position + neighbour;
-
-            // Check if the position is walkable
-            auto it = std::find(walkableTiles.begin(), walkableTiles.end(), newPosition);
-            if (it != walkableTiles.end()) {
-                size_t tile_index = std::distance(walkableTiles.begin(), it);
-
-                // Skip if we've already explored this tile
-                if (explored[tile_index]) continue;
-
-                explored[tile_index] = true;
-
-                float new_g = currentNode.g + 1;
-                float new_h = heuristic(newPosition, end);
-
-                allNodes.emplace_back(newPosition, new_g, new_h, current_index, true);
-                openList.push({new_g + new_h, allNodes.size() - 1});
+            while (current_node != nullptr) {
+                std::cout << "reconstiution point : " << current_node->position.x << ":" << current_node->position.y <<
+                        std::endl;
+                pathPoints.emplace_back(current_node->position);
+                current_node = current_node->previous_node;
             }
-        }
-    }
 
-    return aStarPath;
-}
+            std::reverse(pathPoints.begin(), pathPoints.end());
+            path.Fill(pathPoints);
+
+            return path;
+        }
+
+        Path GetPath(const int gridStep, sf::Vector2f start, sf::Vector2f end,
+                     std::vector<sf::Vector2f> walkableTiles){
+            Path aStarPath;
+
+            // Are start / end point in walkables tiles ?
+            auto f = std::find(walkableTiles.begin(), walkableTiles.end(), start);
+            if (f == walkableTiles.end()) {
+                std::cout << "Start point (" << start.x << ":" << start.y << ")not in walkable tiles" << std::endl;
+                return aStarPath;
+            }
+
+            auto g = std::find(walkableTiles.begin(), walkableTiles.end(), end);
+            if (g == walkableTiles.end()) {
+                std::cout << "End point (" << end.x << ":" << end.y << ") not in walkable tiles" << std::endl;
+                return aStarPath;
+            }
+
+            // ---------------------------------------------
+            std::vector<aStarNode> closedList;
+
+            std::priority_queue<aStarNode> openList;
+            openList.push(aStarNode(start, 0, heuristic(start, end), nullptr));
+
+            while (!openList.empty()) {
+                aStarNode currentNode = openList.top();
+                openList.pop();
+
+                std::cout << "current node : " << currentNode.position.x << ":" << currentNode.position.y << std::endl;
+
+                if (currentNode.position == end) {
+                    std::cout << "Found path" << std::endl;
+                    return ReconstitutePath(currentNode);
+                }
+
+                for (auto neighbour: neighbours(gridStep)) {
+                    sf::Vector2f newPosition = currentNode.position + neighbour;
+
+                    auto f = std::find(walkableTiles.begin(), walkableTiles.end(), newPosition);
+
+                    if (f != walkableTiles.end()) {
+                        auto g = std::find_if(
+                            closedList.begin(),
+                            closedList.end(),
+                            [&newPosition](const aStarNode &n) {
+                                return newPosition == n.position;
+                            }
+                        );
+
+                        // new node
+                        aStarNode newNode = aStarNode(
+                            newPosition,
+                            currentNode.g + 1,
+                            heuristic(newPosition, end),
+                            new aStarNode(currentNode)
+                        );
+
+                        if (g == closedList.end()) {
+                            openList.push(newNode);
+                        }
+                        closedList.emplace_back(newNode);
+                    }
+                }
+            }
+
+            return aStarPath;
+        }
     }
 }

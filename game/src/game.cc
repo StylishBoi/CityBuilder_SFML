@@ -8,8 +8,9 @@
 namespace game{
 
 	namespace{
-	  sf::RenderWindow window_;
 	  sf::Clock clock_;
+
+	  sf::RenderWindow window_;
 	  TileMap tilemap_;
 
 	  api::ai::Npc npc_;

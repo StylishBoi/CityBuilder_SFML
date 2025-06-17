@@ -3,9 +3,11 @@
 using namespace api::motion;
 
 //Verify if we reached the end of the path
-bool Path::IsDone() const{
-  return idxPoint_==pathPoints_.size()-1;
+bool Path::IsDone() const {
+  // Check if the path is empty or if we're at the end
+  return pathPoints_.empty() || idxPoint_ >= pathPoints_.size() - 1;
 }
+
 
 //Verify that the path isn't empty
 bool Path::IsValid() const{
@@ -14,25 +16,33 @@ bool Path::IsValid() const{
 
 //Gets the next point on the path
 sf::Vector2f Path::GetNextPoint() {
-  //If the path is empty, it returns a basic coordinate
-  if (!IsValid()) {
-    return {0,0};
+  // Return default position if path is empty
+  if (pathPoints_.empty()) {
+    return {0, 0};
   }
 
-  //If the path isn't done, get the next point of the path
-  if (!IsDone()) {
+  // Make sure idxPoint_ doesn't exceed vector bounds
+  if (idxPoint_ + 1 < pathPoints_.size()) {
     ++idxPoint_;
   }
-  //Returns the next path point
+
+  // Return current point (bounds already checked by now)
   return pathPoints_[idxPoint_];
 }
 
+
 void Path::Fill(std::vector<sf::Vector2f>& pathPoints) {
-  //Fills up the path if it isn't empty
+  // Reset index when filling new path
+  idxPoint_ = 0;
+
+  // Only fill if we have points
   if (!pathPoints.empty()) {
-    pathPoints_=pathPoints;
+    pathPoints_ = std::move(pathPoints);  // Use move to avoid copy
+  } else {
+    pathPoints_.clear();  // Clear if empty path provided
   }
 }
+
 
 sf::Vector2f Path::StartPoint() const {
   //If the path isn't empty, return the first point of the path
