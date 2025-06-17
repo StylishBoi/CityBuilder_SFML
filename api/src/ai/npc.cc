@@ -1,10 +1,12 @@
 #include "ai/npc.h"
 
 #include <iostream>
+#include <random>
 
 #include "ai/bt_sequence.h"
 #include "ai/bt_selector.h"
 #include "ai/bt_action.h"
+#include "motion/AStar.h"
 
 using namespace api::ai;
 
@@ -72,23 +74,34 @@ void Npc::SetupBehaviourTree() {
   root_=std::move(selector);
 }
 
-void Npc::Setup() {
+void Npc::Setup(const TileMap* tileMap) {
   textures.LoadAssets(files);
 
   SetupBehaviourTree();
 
-  motor_.SetPosition(sf::Vector2f(100.f, 100.f));
+  motor_.SetPosition({0,0});
+  motor_.SetSpeed(kMovingSpeed);
+
+  tileMap_ = tileMap;
+
+  static std::mt19937 gen{std::random_device{}()};
+  static std::uniform_int_distribution<size_t> dist(0, tileMap_->GetWalkables().size() - 1);
+
+  sf::Vector2f end = tileMap_->GetWalkables().at(dist(gen));
+
+  Path path = Astar::GetPath(64, motor_.GetPosition(), end, tileMap_->GetWalkables());
+  SetPath(path);
+
 }
 
 
 void Npc::Update(float dt) {
-  motor_.Update(dt);
-  if (motor_.RemainingDistance()<=0.001f) {
-    motor_.SetDestination(path_.GetNextPoint());
+  if (path_.IsValid()) {
+    motor_.Update(dt);
+    if (motor_.RemainingDistance()<=0.001f && !path_.IsDone()) {
+      motor_.SetDestination(path_.GetNextPoint());
+    }
   }
-
-  std::cout<<"Hunger : "<<hunger_<<std::endl;
-  root_->Tick();
 }
 
 void Npc::Draw(sf::RenderWindow &window) {
@@ -98,3 +111,9 @@ void Npc::Draw(sf::RenderWindow &window) {
 
   window.draw(sprite);
 }
+
+void Npc::SetPath(const Path& path) {
+  path_ = path;
+  motor_.SetDestination(path_.StartPoint());
+}
+

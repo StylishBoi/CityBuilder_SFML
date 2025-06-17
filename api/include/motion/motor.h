@@ -1,7 +1,7 @@
 #ifndef MOTION_H
 #define MOTION_H
 
-#include <SFML/Graphics/Transform.hpp>
+#include <iostream>
 
 namespace api::motion {
 
@@ -10,11 +10,11 @@ namespace api::motion {
     sf::Vector2f destination_;
     float speed_;
 
-    float remainingDistance_=std::numeric_limits<float>::infinity();
+    float remainingDistance_=0;
 
   public:
     void Update(float dt);
-    float RemainingDistance();
+    float RemainingDistance() const;
 
     void SetSpeed(float speed){speed_=speed;}
     void SetPosition(sf::Vector2f position){position_=position;}
@@ -35,7 +35,7 @@ namespace api::motion {
     position_ += distance.normalized()*speed_*dt;
   }
 
-  inline float Motor::RemainingDistance() {
+  inline float Motor::RemainingDistance() const {
     return remainingDistance_;
   }
 

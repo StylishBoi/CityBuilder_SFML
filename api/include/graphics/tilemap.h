@@ -3,6 +3,8 @@
 
 #include "assets/asset_manager.h"
 #include <SFML/Graphics.hpp>
+#include <filesystem>
+#include <stdexcept>
 
 // Window variables
 constexpr static int kWindowWidth = 640;
@@ -33,9 +35,13 @@ private:
   static sf::Vector2f ScreenPosition(int index);
   static int Index(sf::Vector2f screenPosition);
 
+  std::vector<sf::Vector2f> walkables_;
+
 public:
   explicit TileMap();
   void Setup();
   void Draw(sf::RenderWindow &window);
+
+  std::vector<sf::Vector2f> GetWalkables() const{ return walkables_; };
 };
 #endif

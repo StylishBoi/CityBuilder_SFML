@@ -10,11 +10,13 @@ std::array<int, 150> MapGeneration::Drunkard() {
   //Drunkard generation variables
 
   //Setup randomness
-  srand(time(0));
+  std::random_device rd;
+  std::mt19937 gen(rd());
+
 
   std::array<int, 150>grassPositions={};
   int currentIter=0;
-  int tilesConvertedToGrass=1;
+  int tilesConvertedToGrass=0;
 
   std::vector<sf::Vector2i> generationPositions;
 
@@ -27,21 +29,25 @@ std::array<int, 150> MapGeneration::Drunkard() {
   //Drunkard generation loop
   while (currentIter<walkIterMax) {
     //Decides next direction
-    sf::Vector2i nextDirection = Directions::fourWayDirections[std::rand() % Directions::fourWayDirections.size()];
+    std::uniform_int_distribution<> dirDist(0, Directions::fourWayDirections.size() - 1);
+    sf::Vector2i nextDirection = Directions::fourWayDirections[dirDist(gen)];
+
     //Decides the distance to walk
-    int distanceToWalk = std::rand() % (walkDistanceMax - walkDistanceMin) + walkDistanceMin;
+    std::uniform_int_distribution<> walkDist(walkDistanceMin, walkDistanceMax - 1);
+    int distanceToWalk = walkDist(gen);
+
+    generationPositions.clear();
 
     //----------------Walk amount of given steps----------------------
     for (int walk = 0; walk < distanceToWalk; walk++) {
       newGrassSpot=newGrassSpot+nextDirection;
-      std::cout<<newGrassSpot.x<<" and "<<newGrassSpot.y<<std::endl;
+      std::cout<< newGrassSpot.x << " and " << newGrassSpot.y << std::endl;
 
       //----------------BOUNDS LIMITS----------------------
-      if (newGrassSpot.x>(kWindowWidth-walkBounds) || newGrassSpot.x<walkBounds) {
-        std::cout<<"Out of bounds attempt"<<std::endl;
-        newGrassSpot={320, 240};
-      }
-      if (newGrassSpot.y>(kWindowHeight-walkBounds) || newGrassSpot.y<walkBounds) {
+      if (newGrassSpot.x > (kWindowWidth - walkBounds) ||
+          newGrassSpot.x < walkBounds ||
+          newGrassSpot.y >(kWindowHeight-walkBounds)
+        || newGrassSpot.y<walkBounds) {
         std::cout<<"Out of bounds attempt"<<std::endl;
         newGrassSpot={320, 240};
       }
@@ -52,16 +58,16 @@ std::array<int, 150> MapGeneration::Drunkard() {
     }
     //----------------Register all the steps of that loop----------------------
     for (auto step : generationPositions) {
-      grassPositions[tilesConvertedToGrass]=(step.x/kTileSize)+((step.y/kTileSize)*40);
-      std::cout<<step.x<<" x and "<<step.y<<" y"<<std::endl;
-      tilesConvertedToGrass++;
       if (tilesConvertedToGrass >= 150) {
-        return grassPositions;
+        break;
       }
+      grassPositions[tilesConvertedToGrass++]=(step.x/kTileSize)+((step.y/kTileSize)*40);
     }
     //----------------Reset that loop number of steps----------------------
-    newGrassSpot=generationPositions.back();
-    generationPositions.clear();
+    if (!generationPositions.empty()) {
+      newGrassSpot=generationPositions.back();
+    }
+
     //Increase the amount of iter
     currentIter++;
   }
@@ -73,7 +79,21 @@ std::vector<int> MapGeneration::MapThickening() {
   std::vector<int> returnPositions;
   for (auto usedTile : usedTiles) {
     for (auto direction : Directions::fourWayDirections) {
-      newPositions.push_back(usedTile+direction);
+
+      sf::Vector2i newPos = usedTile + direction;
+      sf::Vector2i newPos2 = usedTile + (direction * 2);
+
+      // Add bounds checking
+      if (newPos.x >= walkBounds && newPos.x < (kWindowWidth-walkBounds) &&
+          newPos.y >= walkBounds && newPos.y < (kWindowHeight-walkBounds)) {
+          newPositions.push_back(newPos);
+          }
+
+      if (newPos2.x >= walkBounds && newPos2.x < (kWindowWidth-walkBounds) &&
+          newPos2.y >= walkBounds && newPos2.y < (kWindowHeight-walkBounds)) {
+          newPositions.push_back(newPos2);
+          }
+
     }
   }
   //Converts coordinates into tile position
@@ -85,37 +105,58 @@ std::vector<int> MapGeneration::MapThickening() {
 }
 
 std::vector<int> MapGeneration::HoleFilling() {
-  std::vector<sf::Vector2i> newPositions;
-  std::vector<int> returnPositions;
-  int fillUp=0;
+    std::vector<sf::Vector2i> newPositions;
+    std::vector<int> returnPositions;
 
-  for (auto usedTile : usedTiles) {
-    //Check if the current tile is a grass tile
-    if (std::find(usedTiles.begin(), usedTiles.end(), usedTile) != usedTiles.end()) {
-      //Nothing
-    }
-    //If not a grass tile, check the ones around him
-    else {
-      for (auto direction : Directions::fourWayDirections) {
-        sf::Vector2i neighboorTile=usedTile+direction;
+    // Create a set of positions to check
+    std::vector<sf::Vector2i> tilesToCheck;
 
-        if (std::find(usedTiles.begin(), usedTiles.end(), neighboorTile) != usedTiles.end()) {
-          fillUp++;
+    // Find all positions adjacent to grass tiles
+    for (const auto& grassTile : usedTiles) {
+        for (const auto& direction : Directions::fourWayDirections) {
+            sf::Vector2i adjacentTile = grassTile + direction;
+
+            // Check bounds
+            if (adjacentTile.x >= walkBounds &&
+                adjacentTile.x < (kWindowWidth - walkBounds) &&
+                adjacentTile.y >= walkBounds &&
+                adjacentTile.y < (kWindowHeight - walkBounds)) {
+
+                // Only add if it's not already a grass tile
+                if (std::find(usedTiles.begin(), usedTiles.end(), adjacentTile) == usedTiles.end() &&
+                    std::find(tilesToCheck.begin(), tilesToCheck.end(), adjacentTile) == tilesToCheck.end()) {
+                    tilesToCheck.push_back(adjacentTile);
+                }
+            }
         }
-      }
-      //If enough tiles around him are grass, he becomes grass
-      if (fillUp>=3) {
-        newPositions.push_back(usedTile);
-      }
-      fillUp=0;
     }
-  }
-  //Converts coordinates into tile position
-  for (auto newPosition : newPositions) {
-    returnPositions.push_back((newPosition.x/kTileSize)+((newPosition.y/kTileSize)*40));
-    usedTiles.push_back(newPosition);
-  }
-  return returnPositions;
+
+    // Check each potential position
+    for (const auto& tileToCheck : tilesToCheck) {
+        int grassNeighbors = 0;
+
+        // Count grass neighbors
+        for (const auto& direction : Directions::fourWayDirections) {
+            sf::Vector2i neighborTile = tileToCheck + direction;
+            if (std::find(usedTiles.begin(), usedTiles.end(), neighborTile) != usedTiles.end()) {
+                grassNeighbors++;
+            }
+        }
+
+        // If enough neighbors are grass, add this tile
+        if (grassNeighbors >= 3) {
+            newPositions.push_back(tileToCheck);
+        }
+    }
+
+    // Convert to tile positions and update usedTiles
+    for (const auto& newPosition : newPositions) {
+        int tilePos = (newPosition.x / kTileSize) + ((newPosition.y / kTileSize) * 40);
+        returnPositions.push_back(tilePos);
+        usedTiles.push_back(newPosition);
+    }
+
+    return returnPositions;
 }
 
 std::vector<int> MapGeneration::SandUpdate() {

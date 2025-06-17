@@ -1,7 +1,21 @@
 #include "D:/Module 4/NewCityBuilder/game/include/game.h"
+#include <iostream>
+
 
 int main() {
-  game::Loop();
+  try {
+    game::Loop();
+    return 0;
+  }
+  catch (const std::exception& e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    return 1;
+  }
+  catch (...) {
+    std::cerr << "Unknown error occurred" << std::endl;
+    return 1;
+  }
+
 }
 /*
   //Setup randomnness

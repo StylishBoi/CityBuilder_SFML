@@ -6,18 +6,34 @@
 #include "graphics/directions.h"
 #include "graphics/map_generation.h"
 
-TileMap::TileMap(){}
+TileMap::TileMap() {
+  // Check if directory exists
+  const std::filesystem::path assetPath = "_assets/sprites";
+  if (!std::filesystem::exists(assetPath)) {
+    throw std::runtime_error("Assets directory not found: " + assetPath.string());
+  }
+
+  // Check if all required files exist
+  for (const auto& file : files) {
+    std::filesystem::path filePath = assetPath / file;
+    if (!std::filesystem::exists(filePath)) {
+      throw std::runtime_error("Required asset file not found: " + filePath.string());
+    }
+  }
+
+}
 
 MapGeneration map_generation;
 Directions directions;
 
 void TileMap::Setup(){
+  //Load the assets and fill the terrain with water
   directions.Setup();
   textures.LoadAssets(files);
   tiles_.fill(Tile::kWater);
 
   //Sets up the grass island
-  auto grassSpots=map_generation.Drunkard();
+  /*auto grassSpots=map_generation.Drunkard();
   for (auto grass : grassSpots) {
     tiles_[grass]=Tile::kGrass;
   }
@@ -37,7 +53,7 @@ void TileMap::Setup(){
   auto sandPositions=map_generation.SandUpdate();
   for (auto sandPosition : sandPositions) {
     tiles_[sandPosition]=Tile::kSand;
-  }
+  }*/
 }
 
 void TileMap::Draw(sf::RenderWindow &window){
@@ -63,6 +79,7 @@ void TileMap::Draw(sf::RenderWindow &window){
     tileIndex++;
   }
 }
+
 
 sf::Vector2f TileMap::ScreenPosition(const int index) {
   float x=ceil((index%(kWindowWidth/kTileSize))*kTileSize);

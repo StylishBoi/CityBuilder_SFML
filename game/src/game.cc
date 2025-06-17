@@ -1,8 +1,7 @@
 #include "game.h"
 
-#include <iostream>
+#include <SFML/Graphics.hpp>
 
-#include "SFML/Graphics.hpp"
 #include "ai/npc.h"
 #include "graphics/tilemap.h"
 
@@ -13,13 +12,14 @@ namespace game{
 	  sf::Clock clock_;
 	  TileMap tilemap_;
 
-	  //api::ai::Npc npc_;
+	  api::ai::Npc npc_;
 
 	  void Setup() {
 	    window_.create(sf::VideoMode({kWindowWidth,kWindowHeight}), "SFML window");
 
 	    tilemap_.Setup();
-	    //npc_.Setup();
+
+	    npc_.Setup(&tilemap_);
 	  }
 	}
 
@@ -32,7 +32,7 @@ namespace game{
 		while (window_.isOpen())
 		{
 		        //Reset the clock each frame
-		        float deltaTime = clock_.restart().asSeconds();
+		        auto dt = clock_.restart().asSeconds();
 
 			//Process events
 			while (const std::optional event = window_.pollEvent())
@@ -43,12 +43,12 @@ namespace game{
 				}
 			}
 
-		        //npc_.Update(deltaTime);
+		        npc_.Update(dt);
 
 			window_.clear();
 
-		        //npc_.Draw(window_);
 			tilemap_.Draw(window_);
+		        npc_.Draw(window_);
 
 			window_.display();
 		}
