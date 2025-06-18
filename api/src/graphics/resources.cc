@@ -1,16 +1,22 @@
 #include "graphics/resources.h"
 
 #include <iostream>
+#include <random>
 
 void Resources::Setup(const TileMap* tileMap) {
   textures.LoadAssets(files);
 
   tileMap_ = tileMap;
-  position_.emplace_back(Resource::kWood, sf::Vector2f(160.f, 160.f));
-  position_.emplace_back(Resource::kWood, sf::Vector2f(176.f, 160.f));
-  position_.emplace_back(Resource::kWood, sf::Vector2f(160.f, 176.f));
-  position_.emplace_back(Resource::kWood, sf::Vector2f(176.f, 176.f));
-  std::cout<<"RESOURCES SETUP"<<std::endl;
+  const auto walkableTiles = tileMap_->GetWalkables();
+
+  std::random_device random_device;
+  std::mt19937 engine{random_device()};
+
+  for (int numberOfResources=5; numberOfResources>0; numberOfResources--) {
+    std::uniform_int_distribution<int> dist(0, walkableTiles.size() - 1);
+    sf::Vector2f random_element = walkableTiles[dist(engine)];
+    position_.emplace_back(Resource::kWood, sf::Vector2f(random_element));
+  }
 }
 
 void Resources::Draw(sf::RenderWindow &window){

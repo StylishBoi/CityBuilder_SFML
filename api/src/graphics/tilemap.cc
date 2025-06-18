@@ -14,7 +14,7 @@ Directions directions;
 void TileMap::Setup(){
   directions.Setup();
   textures.LoadAssets(files);
-  tiles_.fill(Tile::kGrass);
+  tiles_.fill(Tile::kWater);
 
   //Sets up the grass island
   auto grassSpots=map_generation.Drunkard();

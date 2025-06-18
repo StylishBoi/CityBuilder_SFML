@@ -2,6 +2,7 @@
 
 using namespace core::ai::behaviour_tree;
 
+//Foundation for sequence and selector nodes
 void Composite::Reset() {
   childIdx_=0;
 }

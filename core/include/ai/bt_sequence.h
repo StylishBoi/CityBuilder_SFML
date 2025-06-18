@@ -1,7 +1,7 @@
 #ifndef BT_SEQUENCE_H
 #define BT_SEQUENCE_H
 #include "bt_composite.h"
-
+//Executes the child nodes in order
 namespace core::ai {
   namespace behaviour_tree {
     class Sequence : public Composite {

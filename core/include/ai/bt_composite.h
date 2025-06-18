@@ -6,6 +6,7 @@
 
 #include "bt_node.h"
 
+//Base files for composite nodes (nodes that can have children)
 namespace core::ai {
   namespace behaviour_tree {
     class Composite : public Node{

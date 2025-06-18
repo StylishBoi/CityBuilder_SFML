@@ -3,6 +3,7 @@
 
 #include "bt_composite.h"
 
+//Tries the children in order until one succeeds
 namespace core::ai {
   namespace behaviour_tree {
 

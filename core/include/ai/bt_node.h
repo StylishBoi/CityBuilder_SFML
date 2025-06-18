@@ -4,6 +4,7 @@
 namespace core::ai{
   namespace behaviour_tree {
 
+  //The status that all nodes will be following
     enum class Status {
       kSuccess,
       kFailure,

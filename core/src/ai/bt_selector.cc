@@ -2,6 +2,7 @@
 
 using namespace core::ai::behaviour_tree;
 
+//Tries the children in order until one succeeds
 Status Selector::Tick() {
 
   while (childIdx_<children_.size()) {

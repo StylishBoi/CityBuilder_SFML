@@ -4,6 +4,7 @@
 #include <functional>
 #include "bt_node.h"
 
+//Represent the leaf nodes
 namespace core::ai {
   namespace behaviour_tree {
 
