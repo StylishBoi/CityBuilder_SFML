@@ -75,7 +75,7 @@ void Npc::SetupBehaviourTree(){
 
 }
 
-void Npc::Setup(const TileMap* tileMap){
+void Npc::Setup(const TileMap* tileMap, const Resources* resources){
   //Load assets for the drawing phase
     textures.LoadAssets(files);
 
@@ -87,6 +87,7 @@ void Npc::Setup(const TileMap* tileMap){
 
   //Intakes the tilemap as a local poitner
     tileMap_ = tileMap;
+    resources_ = resources;
 
   //Setup randomness
     static std::mt19937 gen{std::random_device{}()};
@@ -109,6 +110,17 @@ void Npc::Update(float dt){
         if (!path_.IsDone() && motor_.RemainingDistance() <= 0.001f) {
             motor_.SetDestination(path_.GetNextPoint());
         }
+    }
+    else {
+      if (resources_->resourcePositions_.empty()) {
+        std::cout << "Resource Available, moving....." << std::endl;
+          std::vector<sf::Vector2f> hallo;
+        for (auto element : resources_->resourcePositions_) {
+          hallo.push_back(element.second);
+        }
+        path_.Fill(hallo);
+        motor_.SetDestination(resources_->resourcePositions_[0].second);
+      }
     }
 }
 

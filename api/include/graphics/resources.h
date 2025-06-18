@@ -17,13 +17,10 @@ class Resources : public TileMap {
   // Tilemap
   const TileMap* tileMap_;
 
-  //Position
-  std::vector<std::pair<Resource, sf::Vector2f>> position_;
 
 public:
-  //Position commands
-  /*void SetPosition(sf::Vector2f position, int idx){position_[idx] = position;}
-  [[nodiscard]] const sf::Vector2f& GetPosition(int idx) const{return position_[idx];}*/
+  //Position
+  std::vector<std::pair<Resource, sf::Vector2f>> resourcePositions_;
 
   void Setup(const TileMap* tileMap);
   void Draw(sf::RenderWindow &window);

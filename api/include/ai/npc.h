@@ -5,6 +5,7 @@
 
 #include "ai/bt_node.h"
 #include "assets/asset_manager.h"
+#include "graphics/resources.h"
 #include "graphics/tilemap.h"
 #include "motion/motor.h"
 #include "motion/path.h"
@@ -34,9 +35,10 @@ namespace api::ai {
 
     // Tilemap
     const TileMap* tileMap_;
+    const Resources* resources_;
 
   public:
-    void Setup(const TileMap* tileMap);
+    void Setup(const TileMap* tileMap, const Resources* resources);
     void Update(float dt);
     void Draw(sf::RenderWindow &window);
 

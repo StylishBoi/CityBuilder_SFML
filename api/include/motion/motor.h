@@ -32,6 +32,7 @@ inline void Motor::Update(const float dt){
   const sf::Vector2f distance = destination_ - position_;
   remainingDistance_ = distance.length();
 
+  std::cout << "remaining distance : " << remainingDistance_ << "\n";
   if (remainingDistance_ < speed_ * dt) {
     position_ = destination_;
     return;

@@ -45,10 +45,6 @@ void TileMap::Setup(){
       walkables_.push_back(pos);
     }
   }
-
-  for (auto walkable : walkables_) {
-    std::cout<<walkable.x<<" and "<<walkable.y<<std::endl;
-  }
 }
 
 void TileMap::Draw(sf::RenderWindow &window){

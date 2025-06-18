@@ -6,9 +6,9 @@ class MapGeneration
 {
 private:
   //PCG Generation
-  int walkIterMax=30;
-  int walkDistanceMin=4;
-  int walkDistanceMax=7;
+  int walkIterMax=50;
+  int walkDistanceMin=2;
+  int walkDistanceMax=4;
   int walkBounds=kTileSize*3;
   std::vector<sf::Vector2i> usedTiles;
 

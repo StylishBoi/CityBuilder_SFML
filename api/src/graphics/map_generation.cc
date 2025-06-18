@@ -18,9 +18,6 @@ std::array<int, 150> MapGeneration::Drunkard() {
 
   std::vector<sf::Vector2i> generationPositions;
 
-  std::cout<<numberOfHeightTiles<<std::endl;
-  std::cout<<numberOfWidthTiles<<std::endl;
-
   //Sets up the start
   sf::Vector2i newGrassSpot={320, 240};
 
@@ -34,14 +31,13 @@ std::array<int, 150> MapGeneration::Drunkard() {
     //----------------Walk amount of given steps----------------------
     for (int walk = 0; walk < distanceToWalk; walk++) {
       newGrassSpot=newGrassSpot+nextDirection;
-      std::cout<<newGrassSpot.x<<" and "<<newGrassSpot.y<<std::endl;
 
       //----------------BOUNDS LIMITS----------------------
       if (newGrassSpot.x>(kWindowWidth-walkBounds) ||
         newGrassSpot.x<walkBounds ||
         newGrassSpot.y>(kWindowHeight-walkBounds) ||
         newGrassSpot.y<walkBounds) {
-        std::cout<<"Out of bounds attempt"<<std::endl;
+        //std::cout<<"Out of bounds attempt"<<std::endl;
         newGrassSpot={320, 240};
       }
 
@@ -52,7 +48,6 @@ std::array<int, 150> MapGeneration::Drunkard() {
     //----------------Register all the steps of that loop----------------------
     for (auto step : generationPositions) {
       grassPositions[tilesConvertedToGrass]=(step.x/kTileSize)+((step.y/kTileSize)*40);
-      std::cout<<step.x<<" x and "<<step.y<<" y"<<std::endl;
       tilesConvertedToGrass++;
       if (tilesConvertedToGrass >= 150) {
         return grassPositions;
@@ -73,6 +68,7 @@ std::vector<int> MapGeneration::MapThickening() {
   for (auto usedTile : usedTiles) {
     for (auto direction : Directions::fourWayDirections) {
       newPositions.push_back(usedTile+direction);
+      //newPositions.push_back(usedTile+direction*2);
     }
   }
   //Converts coordinates into tile position
