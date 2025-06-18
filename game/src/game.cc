@@ -4,6 +4,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "ai/npc.h"
+#include "graphics/resources.h"
 #include "graphics/tilemap.h"
 
 namespace game{
@@ -15,12 +16,14 @@ namespace game{
 	  TileMap tilemap_;
 
 	  api::ai::Npc npc_;
+	  Resources resources_;
 
 	  void Setup() {
 	    window_.create(sf::VideoMode({kWindowWidth,kWindowHeight}), "SFML window");
 
 	    tilemap_.Setup();
 	    npc_.Setup(&tilemap_);
+	    resources_.Setup(&tilemap_);
 	  }
 	}
 
@@ -50,6 +53,7 @@ namespace game{
 
 			tilemap_.Draw(window_);
 		        npc_.Draw(window_);
+		        resources_.Draw(window_);
 
 			window_.display();
 		}

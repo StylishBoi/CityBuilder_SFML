@@ -59,17 +59,8 @@ void TileMap::Draw(sf::RenderWindow &window){
   for (auto element: tiles_) {
 
     sprite.setPosition(ScreenPosition(tileIndex));
-
-    if (element==Tile::kNpc || element==Tile::kFood || element==Tile::kRock) {
-      sprite.setTexture(textures.GetAsset(Tile::kGrass));
-      window.draw(sprite);
-      sprite.setTexture(textures.GetAsset(element));
-      window.draw(sprite);
-    }
-    else {
-      sprite.setTexture(textures.GetAsset(element));
-      window.draw(sprite);
-    }
+    sprite.setTexture(textures.GetAsset(element));
+    window.draw(sprite);
 
     tileIndex++;
   }

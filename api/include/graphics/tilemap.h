@@ -20,20 +20,20 @@ public:
     kSand,
     kRock,
     kNpc,
-    kFood,
     kLength
   };
 
-  std::string_view files[static_cast<size_t>(Tile::kLength)]{"grass.png", "water.png", "flowers.png", "sand.png", "rock.png","npc.png","food.png"};
+  std::string_view files[static_cast<size_t>(Tile::kLength)]{"grass.png", "water.png", "flowers.png", "sand.png", "rock.png","npc.png"};
 
 private:
   std::array<Tile, (kWindowWidth/kTileSize) * (kWindowHeight/kTileSize)> tiles_={};
   AssetManager<sf::Texture, Tile, "_assets/sprites"> textures;
 
+  std::vector<sf::Vector2f> walkables_;
+
+protected:
   static sf::Vector2f ScreenPosition(int index);
   static int Index(sf::Vector2f screenPosition);
-
-  std::vector<sf::Vector2f> walkables_;
 
 public:
   explicit TileMap();

@@ -11,7 +11,7 @@
 using namespace api::ai;
 
 Status Npc::Move(){
-    // if destination not reachable, return failure
+    // If the destination isn't reached, returns failure
     if (!target_reachable_) {
         std::cout << "Not reachable" << target_reachable_ << std::endl;
         return Status::kFailure;
@@ -22,7 +22,7 @@ Status Npc::Move(){
             target_distance_ -= kMovingSpeed;
             return Status::kRunning;
         } else {
-            // if destination reached, return success
+            // If destination reached, return success
             return Status::kSuccess;
         }
     }
@@ -76,19 +76,23 @@ void Npc::SetupBehaviourTree(){
 }
 
 void Npc::Setup(const TileMap* tileMap){
+  //Load assets for the drawing phase
     textures.LoadAssets(files);
 
     SetupBehaviourTree();
 
+  //Sets up the motor
     motor_.SetPosition({320, 240});
     motor_.SetSpeed(kMovingSpeed);
 
+  //Intakes the tilemap as a local poitner
     tileMap_ = tileMap;
 
-
+  //Setup randomness
     static std::mt19937 gen{std::random_device{}()};
     static std::uniform_int_distribution<size_t> dist(0, tileMap_->GetWalkables().size() - 1);
 
+  //Setup path
     sf::Vector2f end = tileMap_->GetWalkables().at(dist(gen));
 
     Path path = Astar::GetPath(64, motor_.GetPosition(), end, tileMap_->GetWalkables());
@@ -97,21 +101,25 @@ void Npc::Setup(const TileMap* tileMap){
 }
 
 void Npc::Update(float dt){
-    // -------------------
+
+    // If the path is valid, the player will move
     if (path_.IsValid()){
         motor_.Update(dt);
+        //If the path isn't done yet, the player will find the next point to go to
         if (!path_.IsDone() && motor_.RemainingDistance() <= 0.001f) {
             motor_.SetDestination(path_.GetNextPoint());
         }
     }
 }
 
+//Draws the npc on the tilemap
 void Npc::Draw(sf::RenderWindow &window){
     sf::Sprite sprite(textures.GetAsset(Animation::kBlue));
     sprite.setPosition(motor_.GetPosition());
     window.draw(sprite);
 }
 
+//Sets a new path for the npc
 void Npc::SetPath(const Path& path){
     path_ = path;
     motor_.SetDestination(path_.StartPoint());

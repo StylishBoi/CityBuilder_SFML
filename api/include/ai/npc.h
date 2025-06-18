@@ -28,6 +28,7 @@ namespace api::ai {
     static constexpr float kHungerRate=0.1f;
     static constexpr float kMovingSpeed=50.0f;
 
+    //Pathfinding
     Motor motor_;
     Path path_;
 
@@ -49,6 +50,7 @@ namespace api::ai {
     float hunger_=0;
     bool resourceAvailable_=true;
 
+    //Movement
     bool target_reachable_=true;
     float target_distance_=20;
 

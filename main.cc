@@ -2,6 +2,8 @@
 
 int main() {
   game::Loop();
+
+  return 0;
 }
 /*
   //Setup randomnness
