@@ -14,7 +14,7 @@ std::array<int, 150> MapGeneration::Drunkard() {
 
   std::array<int, 150>grassPositions={};
   int currentIter=0;
-  int tilesConvertedToGrass=1;
+  int tilesConvertedToGrass=0;
 
   std::vector<sf::Vector2i> generationPositions;
 
@@ -37,11 +37,10 @@ std::array<int, 150> MapGeneration::Drunkard() {
       std::cout<<newGrassSpot.x<<" and "<<newGrassSpot.y<<std::endl;
 
       //----------------BOUNDS LIMITS----------------------
-      if (newGrassSpot.x>(kWindowWidth-walkBounds) || newGrassSpot.x<walkBounds) {
-        std::cout<<"Out of bounds attempt"<<std::endl;
-        newGrassSpot={320, 240};
-      }
-      if (newGrassSpot.y>(kWindowHeight-walkBounds) || newGrassSpot.y<walkBounds) {
+      if (newGrassSpot.x>(kWindowWidth-walkBounds) ||
+        newGrassSpot.x<walkBounds ||
+        newGrassSpot.y>(kWindowHeight-walkBounds) ||
+        newGrassSpot.y<walkBounds) {
         std::cout<<"Out of bounds attempt"<<std::endl;
         newGrassSpot={320, 240};
       }

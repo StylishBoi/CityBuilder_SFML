@@ -9,17 +9,18 @@
 namespace game{
 
 	namespace{
-	  sf::RenderWindow window_;
 	  sf::Clock clock_;
+
+	  sf::RenderWindow window_;
 	  TileMap tilemap_;
 
-	  //api::ai::Npc npc_;
+	  api::ai::Npc npc_;
 
 	  void Setup() {
 	    window_.create(sf::VideoMode({kWindowWidth,kWindowHeight}), "SFML window");
 
 	    tilemap_.Setup();
-	    //npc_.Setup();
+	    npc_.Setup(&tilemap_);
 	  }
 	}
 
@@ -43,12 +44,12 @@ namespace game{
 				}
 			}
 
-		        //npc_.Update(deltaTime);
+		        npc_.Update(deltaTime);
 
 			window_.clear();
 
-		        //npc_.Draw(window_);
 			tilemap_.Draw(window_);
+		        npc_.Draw(window_);
 
 			window_.display();
 		}

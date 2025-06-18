@@ -5,6 +5,7 @@
 
 #include "ai/bt_node.h"
 #include "assets/asset_manager.h"
+#include "graphics/tilemap.h"
 #include "motion/motor.h"
 #include "motion/path.h"
 
@@ -25,13 +26,16 @@ namespace api::ai {
     std::unique_ptr<Node> root_;
 
     static constexpr float kHungerRate=0.1f;
-    static constexpr float kMovingSpeed=0.5f;
+    static constexpr float kMovingSpeed=50.0f;
 
     Motor motor_;
     Path path_;
 
+    // Tilemap
+    const TileMap* tileMap_;
+
   public:
-    void Setup();
+    void Setup(const TileMap* tileMap);
     void Update(float dt);
     void Draw(sf::RenderWindow &window);
 

@@ -14,7 +14,7 @@ Directions directions;
 void TileMap::Setup(){
   directions.Setup();
   textures.LoadAssets(files);
-  tiles_.fill(Tile::kWater);
+  tiles_.fill(Tile::kGrass);
 
   //Sets up the grass island
   auto grassSpots=map_generation.Drunkard();
@@ -37,6 +37,17 @@ void TileMap::Setup(){
   auto sandPositions=map_generation.SandUpdate();
   for (auto sandPosition : sandPositions) {
     tiles_[sandPosition]=Tile::kSand;
+  }
+
+  for (int tileIndex = 0; tileIndex < tiles_.size(); ++tileIndex) {
+    if (tiles_[tileIndex]==Tile::kGrass || tiles_[tileIndex]==Tile::kFlowers || tiles_[tileIndex]==Tile::kSand) {
+      sf::Vector2f pos = ScreenPosition(tileIndex);
+      walkables_.push_back(pos);
+    }
+  }
+
+  for (auto walkable : walkables_) {
+    std::cout<<walkable.x<<" and "<<walkable.y<<std::endl;
   }
 }
 
