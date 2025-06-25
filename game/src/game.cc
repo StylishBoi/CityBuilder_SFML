@@ -30,9 +30,9 @@ namespace game{
 
 	    tilemap_ptr_->Setup();
 	    resources_.Setup(tilemap_ptr_.get());
-	    npc_manager_.Add(api::ai::NpcType::kGreen, tilemap_ptr_.get());
-	    npc_manager_.Add(api::ai::NpcType::kBlue, tilemap_ptr_.get());
-	    npc_manager_.Add(api::ai::NpcType::kRed, tilemap_ptr_.get());
+	    npc_manager_.Add(api::ai::NpcType::kGreen, tilemap_ptr_.get(), &resources_);
+	    npc_manager_.Add(api::ai::NpcType::kBlue, tilemap_ptr_.get(), &resources_);
+	    npc_manager_.Add(api::ai::NpcType::kRed, tilemap_ptr_.get(), &resources_);
 
 	    rect_.setPosition({static_cast<float>(25), static_cast<float>(window_.getSize().y - 75)});
 	    rect_.setSize({50, 50});

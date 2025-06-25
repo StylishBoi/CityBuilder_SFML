@@ -5,6 +5,7 @@
 
 #include "ai/bt_node.h"
 #include "graphics/tilemap.h"
+#include "graphics/resources.h"
 #include "motion/motor.h"
 #include "motion/path.h"
 
@@ -14,14 +15,17 @@ namespace api::ai {
     std::unique_ptr<core::ai::behaviour_tree::Node> bt_root_;
     motion::Motor *npc_motor_ = nullptr;
     TileMap *tilemap_ = nullptr;
+    Resources *resources_ = nullptr;
     motion::Path *path_ = nullptr;
 
 
     void SetRandomDestination() const;
+    void SetResourceDestination() const;
     // Actions
     [[nodiscard]] core::ai::behaviour_tree::Status CheckHunger() const;
+    [[nodiscard]] core::ai::behaviour_tree::Status CheckWork() const;
     [[nodiscard]] core::ai::behaviour_tree::Status Move() const;
-    [[nodiscard]] core::ai::behaviour_tree::Status Eat();
+    [[nodiscard]] core::ai::behaviour_tree::Status Eat(float);
     [[nodiscard]] core::ai::behaviour_tree::Status Work();
     [[nodiscard]] core::ai::behaviour_tree::Status Idle();
 
@@ -42,7 +46,8 @@ namespace api::ai {
     void SetupBehaviourTree(
         motion::Motor* npc_motor,
         motion::Path* path,
-        TileMap* tilemap);
+        TileMap* tilemap,
+        Resources* resources);
     void Update(float dt);
 
   };

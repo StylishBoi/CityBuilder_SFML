@@ -17,7 +17,6 @@ class Resources : public TileMap {
   // Tilemap
   const TileMap* tileMap_;
 
-
 public:
   //Position
   std::vector<std::pair<Resource, sf::Vector2f>> resourcePositions_;

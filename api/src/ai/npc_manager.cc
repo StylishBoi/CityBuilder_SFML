@@ -4,8 +4,8 @@
 
 namespace api::ai {
 
-void NpcManager::Add(NpcType type, TileMap* tilemap) {
-  CreateNpc(npcs_, type, tilemap);
+void NpcManager::Add(NpcType type, TileMap* tilemap, Resources* resources) {
+  CreateNpc(npcs_, type, tilemap, resources);
 }
 
 void NpcManager::Update(float dt) {
