@@ -3,60 +3,40 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "ai/bt_node.h"
-#include "assets/asset_manager.h"
-#include "graphics/resources.h"
+#include "npc_behaviour_tree.h"
 #include "graphics/tilemap.h"
 #include "motion/motor.h"
 #include "motion/path.h"
 
-using namespace core::ai::behaviour_tree;
-using namespace api::motion;
-
 namespace api::ai {
-  class Npc {
-    enum class Animation {
-      kEmpty,
-      kBlue,
-      kLength
-    };
+class Npc {
 
-    std::string_view files[static_cast<size_t>(Animation::kLength)]{"empty.png", "npc_blue.png"};
-    core::experimental::AssetManager<sf::Texture, Animation, "_assets/sprites"> textures;
+  sf::Texture texture_;
 
-    std::unique_ptr<Node> root_;
+  // Decision
+  std::unique_ptr<NpcBehaviourTree> bt_tree_ = std::make_unique<NpcBehaviourTree>();
 
-    static constexpr float kHungerRate=0.1f;
-    static constexpr float kMovingSpeed=50.0f;
+  // Movement
+  static constexpr float kMovingSpeed = 200.0f;
+  std::unique_ptr<motion::Motor> motor_ = std::make_unique<motion::Motor>();
+  std::unique_ptr<motion::Path> path_ = std::make_unique<motion::Path>();
 
-    //Pathfinding
-    Motor motor_;
-    Path path_;
+  // name
+  std::string name_;
+  // World informations
+  // Tilemap
+  //const TileMap *tileMap_;
 
-    // Tilemap
-    const TileMap* tileMap_;
-    const Resources* resources_;
+public:
+  void Setup(std::string_view name, std::string_view filename,
+             TileMap* tilemap);
+  void Update(float dt);
+  void Draw(sf::RenderWindow &window);
 
-  public:
-    void Setup(const TileMap* tileMap, const Resources* resources);
-    void Update(float dt);
-    void Draw(sf::RenderWindow &window);
+  // Motion
+  // void SetPath(const motion::Path &path);
 
-    //Actions
-    Status Move();
-    Status Eat();
-
-    void SetupBehaviourTree();
-
-    //Behaviours
-    float hunger_=0;
-    bool resourceAvailable_=true;
-
-    //Movement
-    bool target_reachable_=true;
-    float target_distance_=20;
-
-    void SetPath(const Path& path);
-  };
+};
 }
+
 #endif //NPC_H
