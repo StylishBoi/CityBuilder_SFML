@@ -22,8 +22,9 @@ void NpcBehaviourTree::SetRandomDestination() const {
 
   sf::Vector2f end = this->tilemap_->GetWalkables().at(dist(gen));
 
-  Path path = Astar::GetPath(64, npc_motor_->GetPosition(), end,
+  Path path = Astar::GetPath(kTileSize, npc_motor_->GetPosition(), end,
                              this->tilemap_->GetWalkables());
+
   this->path_->Fill(path.Points());
   this->npc_motor_->SetDestination(path.StartPoint());
 }

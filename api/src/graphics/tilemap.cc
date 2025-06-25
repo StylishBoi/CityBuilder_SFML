@@ -43,6 +43,7 @@ void TileMap::Setup(){
     if (tiles_[tileIndex]==Tile::kGrass || tiles_[tileIndex]==Tile::kFlowers || tiles_[tileIndex]==Tile::kSand) {
       sf::Vector2f pos = ScreenPosition(tileIndex);
       walkables_.push_back(pos);
+      std::cout<<pos.x<<", "<<pos.y<<std::endl;
     }
   }
 }

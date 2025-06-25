@@ -70,12 +70,14 @@ namespace api::motion {
             // Are start / end point in walkables tiles ?
             auto f = std::find(walkableTiles.begin(), walkableTiles.end(), start);
             if (f == walkableTiles.end()) {
+              std::cout<<"We are passing 1";
                 std::cout << "Start point (" << start.x << ":" << start.y << ")not in walkable tiles" << std::endl;
                 return aStarPath;
             }
 
             auto g = std::find(walkableTiles.begin(), walkableTiles.end(), end);
             if (g == walkableTiles.end()) {
+              std::cout<<"We are passing 2";
                 std::cout << "End point (" << end.x << ":" << end.y << ") not in walkable tiles" << std::endl;
                 return aStarPath;
             }
@@ -94,6 +96,7 @@ namespace api::motion {
 
                 if (currentNode.position == end) {
                     std::cout << "Found path" << std::endl;
+                    std::cout<<"We are passing 3";
                     return ReconstitutePath(currentNode);
                 }
 
@@ -107,6 +110,7 @@ namespace api::motion {
                             closedList.begin(),
                             closedList.end(),
                             [&newPosition](const aStarNode &n) {
+                            std::cout<<"We are passing 4";
                                 return newPosition == n.position;
                             }
                         );
@@ -127,6 +131,7 @@ namespace api::motion {
                 }
             }
 
+            std::cout<<"We are passing 5";
             return aStarPath;
         }
     }
