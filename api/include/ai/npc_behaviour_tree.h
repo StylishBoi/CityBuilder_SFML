@@ -4,8 +4,8 @@
 #include <memory>
 
 #include "ai/bt_node.h"
+#include "graphics/resources_manager.h"
 #include "graphics/tilemap.h"
-#include "graphics/resources.h"
 #include "motion/motor.h"
 #include "motion/path.h"
 

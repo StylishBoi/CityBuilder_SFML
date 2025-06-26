@@ -1,7 +1,7 @@
-#include "graphics/resources.h"
-
 #include <iostream>
 #include <random>
+
+#include "graphics/resources_manager.h"
 
 void Resources::Setup(const TileMap* tileMap) {
   textures.LoadAssets(files);
