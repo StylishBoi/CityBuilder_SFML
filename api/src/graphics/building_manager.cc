@@ -5,17 +5,17 @@ void BuildingManager::Setup(const TileMap* tileMap) {
 
   tileMap_ = tileMap;
 
-  buildingPositions_.emplace_back(Building::kHouse, sf::Vector2f(320, 240));
+  buildingPositions_.emplace_back(Building::kLumberHouse, sf::Vector2f(320, 240));
 }
 
 void BuildingManager::Add(sf::Vector2f position) {
-  buildingPositions_.emplace_back(Building::kHouse,position);
+  buildingPositions_.emplace_back(Building::kLumberHouse,position);
 }
 
 
 void BuildingManager::Draw(sf::RenderWindow &window){
 
-  sf::Sprite sprite(textures.GetAsset(Building::kHouse));
+  sf::Sprite sprite(textures.GetAsset(Building::kLumberHouse));
 
   for (auto [building, position] : buildingPositions_) {
     sprite.setPosition(position);

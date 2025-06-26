@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "../../../game/include/resources_manager.h"
+#include "../resources/resources_manager.h"
 #include "ai/bt_node.h"
 #include "graphics/tilemap.h"
 #include "motion/motor.h"
@@ -13,41 +13,43 @@ namespace api::ai {
   class NpcBehaviourTree {
     // Behaviour tree
     std::unique_ptr<core::ai::behaviour_tree::Node> bt_root_;
-    motion::Motor *npc_motor_ = nullptr;
+
     TileMap *tilemap_ = nullptr;
-    ResourceManager *resources_ = nullptr;
+
+    motion::Motor *npc_motor_ = nullptr;
     motion::Path *path_ = nullptr;
 
 
-    void SetRandomDestination() const;
-    void SetResourceDestination() const;
+    void SetDestination(const sf::Vector2f& destination) const;
     // Actions
     [[nodiscard]] core::ai::behaviour_tree::Status CheckHunger() const;
-    [[nodiscard]] core::ai::behaviour_tree::Status CheckWork() const;
     [[nodiscard]] core::ai::behaviour_tree::Status Move() const;
-    [[nodiscard]] core::ai::behaviour_tree::Status Eat(float);
-    [[nodiscard]] core::ai::behaviour_tree::Status Work();
+    [[nodiscard]] core::ai::behaviour_tree::Status Eat();
+    [[nodiscard]] core::ai::behaviour_tree::Status PickResource();
+    [[nodiscard]] core::ai::behaviour_tree::Status GetResource();
     [[nodiscard]] core::ai::behaviour_tree::Status Idle();
 
     // Behaviour Constants
-    static constexpr float kHungerRate = 0.1f;
+    static constexpr float kHungerRate = 2.f;
+    static constexpr float kExploitRate = 1.f;
 
     // Behaviours
     float hunger_ = 0.0f;
     bool resourceAvailable_ = true;
-    // bool target_reachable_ = true;
-    // float target_distance_ = 20;
+    float tick_dt=0;
+
+    sf::Vector2f home_position_;
+    std::vector<Resource> resources_;
+    Resource current_resource_;
 
   public:
-    //NpcBehaviourTree() = default;
-    //NpcBehaviourTree(const NpcBehaviourTree&) = delete;
-    //NpcBehaviourTree& operator=(const NpcBehaviourTree&) = delete;
 
     void SetupBehaviourTree(
         motion::Motor* npc_motor,
         motion::Path* path,
         TileMap* tilemap,
-        ResourceManager* resources);
+        sf::Vector2f home_position,
+        std::vector<Resource> resources);
     void Update(float dt);
 
   };

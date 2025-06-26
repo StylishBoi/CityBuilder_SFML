@@ -15,39 +15,15 @@ using namespace api::motion;
 
 namespace api::ai {
 
-  void NpcBehaviourTree::SetRandomDestination() const {
-    sf::Vector2f end = {320,240};
+  void NpcBehaviourTree::SetDestination(const sf::Vector2f& destination) const {
 
-    Path path = Astar::GetPath(kTileSize, npc_motor_->GetPosition(), end,
-                               this->tilemap_->GetWalkables());
+    Path path = Astar::GetPath(64, npc_motor_->GetPosition(), destination,
+                                                       this->tilemap_->GetWalkables());
+    if (path.IsValid()) {
+      this->path_->Fill(path.Points());
+      this->npc_motor_->SetDestination(path.StartPoint());
+    }
 
-    this->path_->Fill(path.Points());
-    this->npc_motor_->SetDestination(path.StartPoint());
-    /*static std::mt19937 gen{std::random_device{}()};
-    static std::uniform_int_distribution<size_t> dist(
-        0, this->tilemap_->GetWalkables().size() - 1);
-
-    sf::Vector2f end = this->tilemap_->GetWalkables().at(dist(gen));
-
-    Path path = Astar::GetPath(kTileSize, npc_motor_->GetPosition(), end,
-                               this->tilemap_->GetWalkables());
-
-    this->path_->Fill(path.Points());
-    this->npc_motor_->SetDestination(path.StartPoint());*/
-  }
-
-void NpcBehaviourTree::SetResourceDestination() const {
-    static std::mt19937 gen{std::random_device{}()};
-    static std::uniform_int_distribution<size_t> dist(
-        0, this->resources_->resourcePositions_.size() - 1);
-
-    sf::Vector2f end = this->resources_->resourcePositions_.at(dist(gen)).second;
-
-    Path path = Astar::GetPath(kTileSize, npc_motor_->GetPosition(), end,
-                               this->tilemap_->GetWalkables());
-
-    this->path_->Fill(path.Points());
-    this->npc_motor_->SetDestination(path.StartPoint());
   }
 
   Status NpcBehaviourTree::CheckHunger() const {
@@ -70,45 +46,16 @@ void NpcBehaviourTree::SetResourceDestination() const {
         return Status::kFailure;
       }
 
-      SetRandomDestination();
-
       return Status::kSuccess;
 
     } else {
       std::cout << " : No, I can wait\n";
       return Status::kFailure;
     }
+      SetDestination(home_position_);
   }
 
-Status NpcBehaviourTree::CheckWork() const {
-    std::cout << "this ? = " << this << "\n";
-    std::cout << "Do I need to work ? " << std::to_string(hunger_);
 
-    if (!resources_->resourcePositions_.empty()) {
-      std::cout << " : Yes, I need to work\n";
-
-      if (!tilemap_) {
-        std::cout << "No tilemap\n";
-        return Status::kFailure;
-      }
-      if (!path_) {
-        std::cout << "No path\n";
-        return Status::kFailure;
-      }
-      if (!npc_motor_) {
-        std::cout << "No motor\n";
-        return Status::kFailure;
-      }
-
-      SetResourceDestination();
-
-      return Status::kSuccess;
-
-    } else {
-      std::cout << " : No, I can't work\n";
-      return Status::kFailure;
-    }
-  }
 
   Status NpcBehaviourTree::Move() const {
     // if destination not reachable, return failure
@@ -127,9 +74,9 @@ Status NpcBehaviourTree::CheckWork() const {
     }
   }
 
-  Status NpcBehaviourTree::Eat(float foodQuantity ) {
+  Status NpcBehaviourTree::Eat() {
     // No failure, until we have food storage system
-    hunger_ -= foodQuantity;
+    hunger_ -= kHungerRate * tick_dt;
     if (hunger_ > 0) {
       return Status::kRunning;
     } else {
@@ -137,14 +84,39 @@ Status NpcBehaviourTree::CheckWork() const {
     }
   }
 
-  Status NpcBehaviourTree::Work() {
-    hunger_ += kHungerRate * 5;
-    if (resourceAvailable_) {
-      std::cout << "Resource Available, working....." << "\n";
-      return Status::kSuccess;
+  Status NpcBehaviourTree::PickResource() {
+
+      if (resources_.empty()) {
+        std::cout << "No resources available\n";
+        return Status::kFailure;
+      }
+
+      std::mt19937 gen{std::random_device{}()};
+      std::uniform_int_distribution<size_t> dist(0, resources_.size() - 1);
+
+      if (resources_[dist(gen)].GetQty() > 0) {
+        current_resource_ = resources_[dist(gen)];
+        SetDestination(TileMap::ScreenPosition(current_resource_.GetTileIndex()));
+
+        if (path_->IsValid())
+          return Status::kSuccess;
+
+      }
+
+      return Status::kFailure;
+
+
     }
-    return Status::kFailure;
-  }
+
+  Status NpcBehaviourTree::GetResource() {
+      if (current_resource_.GetQty() <= 0) {
+        return Status::kSuccess;
+      }
+
+      current_resource_.Exploit(kExploitRate * tick_dt);
+      hunger_ += kHungerRate * tick_dt;
+      return Status::kRunning;
+    }
 
   Status NpcBehaviourTree::Idle() {
     hunger_ += kHungerRate * 5;
@@ -153,7 +125,8 @@ Status NpcBehaviourTree::CheckWork() const {
   }
 
   void NpcBehaviourTree::SetupBehaviourTree(Motor* npc_motor, Path* path,
-                                            TileMap* tilemap, ResourceManager* resources) {
+                                            TileMap* tilemap, sf::Vector2f home_position,
+                                            std::vector<Resource> resources) {
     std::cout << "Setup Behaviour Tree\n";
 
     hunger_ = 0;
@@ -161,24 +134,30 @@ Status NpcBehaviourTree::CheckWork() const {
     npc_motor_ = npc_motor;
     path_ = path;
     tilemap_ = tilemap;
+    home_position_ = home_position;
     resources_ = resources;
 
     auto feedSequence = std::make_unique<Sequence>();
     feedSequence->AddChild(std::make_unique<Action>([this]() { return CheckHunger(); }));
-    feedSequence->AddChild(std::make_unique<Action>([this]() { return CheckWork(); }));
     feedSequence->AddChild(std::make_unique<Action>([this]() { return Move(); }));
-    feedSequence->AddChild(std::make_unique<Action>([this]() { return Eat(kHungerRate); }));
+    feedSequence->AddChild(std::make_unique<Action>([this]() { return Eat(); }));
+
+    auto workSequence = std::make_unique<Sequence>();
+    workSequence->AddChild(std::make_unique<Action>([this]() { return PickResource(); }));
+    workSequence->AddChild(std::make_unique<Action>([this]() { return Move(); }));
+    workSequence->AddChild(std::make_unique<Action>([this]() { return GetResource(); }));
 
     auto selector = std::make_unique<Selector>();
     // Attach the sequence to the selector
     selector->AddChild(std::move(feedSequence));
-    selector->AddChild(std::make_unique<Action>([this]() { return Work(); }));
+    selector->AddChild(std::move(workSequence));
     selector->AddChild(std::make_unique<Action>([this]() { return Idle(); }));
 
     bt_root_ = std::move(selector);
   }
 
-    void NpcBehaviourTree::Update(float dt) {
-      bt_root_->Tick();
+  void NpcBehaviourTree::Update(float dt) {
+    tick_dt = dt;
+    bt_root_->Tick();
   }
 }  // namespace api::ai

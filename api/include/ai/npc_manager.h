@@ -1,7 +1,3 @@
-//
-// Created by max on 19.06.2025.
-//
-
 #ifndef NPC_MANAGER_H
 #define NPC_MANAGER_H
 
@@ -10,19 +6,18 @@
 namespace api::ai {
 
   enum class NpcType {
-    kBlue,
-    kRed,
-    kGreen
+    kBlueLumberjack,
+    kRedMiner,
+    kGreenGatherer
 };
 
   class NpcManager {
-
     std::vector<Npc> npcs_;
 
   public:
-    void Add(NpcType type, TileMap* tilemap, ResourceManager* resources);
+    void Add(NpcType type, TileMap* tilemap, sf::Vector2f start_position, ResourceManager& resources_manager);
     void Update(float dt);
-    void Draw(sf::RenderWindow &window) const;
+    void Draw(sf::RenderWindow &window);
 
   };
 }

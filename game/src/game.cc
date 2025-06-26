@@ -1,6 +1,6 @@
 #include "game.h"
 
-#include "../include/resources_manager.h"
+#include "resources/resources_manager.h"
 #include "SFML/Graphics.hpp"
 #include "ai/npc_manager.h"
 #include "graphics/building_manager.h"
@@ -10,7 +10,6 @@
 #include "ui/clickable.h"
 
 namespace game{
-
 	namespace{
 
 	//Inline makes it so that it is compiled on the spot
@@ -20,43 +19,62 @@ namespace game{
 	auto tilemap_ptr_= std::make_unique<TileMap>();
 	api::ai::NpcManager npc_manager_;
 
-	ResourceManager resources_;
+	ResourceManager resource_manager_;
 	BuildingManager building_manager_;
 
 	// UI Elements
+        api::ui::ButtonFactory btn_factory;
+
 	std::unique_ptr<api::ui::Button> btnBlue;
 	std::unique_ptr<api::ui::Button> btnRed;
 	std::unique_ptr<api::ui::Button> btnGreen;
 
-        api::ui::ButtonFactory btn_factory;
+	api::ai::NpcType npc_adding_type = api::ai::NpcType::kBlueLumberjack;
 
-        //api::ai::NpcType npc_adding_type = building_manager_;
 
+
+	void ChopEvent(int index, float quantity) {
+	  std::cout << "chop event : " << index << "," << quantity << "\n";
+	  if (quantity <= 0){
+	    tilemap_ptr_->SetTile(index, TileMap::Tile::kFlowers);
+	  }
+	}
 
 	  void Setup() {
 	    window_.create(sf::VideoMode({kWindowWidth,kWindowHeight}), "SFML window");
 
 	    tilemap_ptr_->Setup();
-	    resources_.Setup(tilemap_ptr_.get());
 	    building_manager_.Setup(tilemap_ptr_.get());
 
-	    /*building_manager_.OnReleasedLeft = []() {
+	    tilemap_ptr_->OnReleasedLeft = []() {
 	      std::cout << "Clicked tilemap" << "\n";
-	      building_manager_.Add({32,48});
-	    };*/
+	      npc_manager_.Add(npc_adding_type,
+                             tilemap_ptr_.get(),
+                             TileMap::TilePos(sf::Mouse::getPosition(window_)),
+                             resource_manager_);
+	      npc_adding_type = api::ai::NpcType::kBlueLumberjack;
+	    };
 
-	    npc_manager_.Add(api::ai::NpcType::kGreen, tilemap_ptr_.get(), &resources_);
-	    npc_manager_.Add(api::ai::NpcType::kBlue, tilemap_ptr_.get(), &resources_);
-	    npc_manager_.Add(api::ai::NpcType::kRed, tilemap_ptr_.get(), &resources_);
+	    btnBlue = btn_factory.CreateButton(sf::Vector2f(50.f, static_cast<float>(window_.getSize().y) - 50.f), "Lumberjack");
+            btnBlue->OnReleasedLeft = []() { npc_adding_type = api::ai::NpcType::kBlueLumberjack; };
 
-	    btnBlue = btn_factory.CreateButton(sf::Vector2f(50.f, static_cast<float>(window_.getSize().y) - 50.f), "Blue");
-            //btnBlue->OnReleasedLeft = []() { npc_adding_type = api::ai::NpcType::kBlue; };
+	    btnRed = btn_factory.CreateButton(sf::Vector2f(150.f, static_cast<float>(window_.getSize().y)  - 50.f), "Miner");
+            btnRed->OnReleasedLeft = []() { npc_adding_type = api::ai::NpcType::kRedMiner; };
 
-	    btnRed = btn_factory.CreateButton(sf::Vector2f(150.f, static_cast<float>(window_.getSize().y)  - 50.f), "Red");
-            //btnRed->OnReleasedLeft = []() { npc_adding_type = api::ai::NpcType::kRed; };
+	    btnGreen = btn_factory.CreateButton(sf::Vector2f(250.f, static_cast<float>(window_.getSize().y)  - 50.f), "Gatherer");
+            btnGreen->OnReleasedLeft = []() {npc_adding_type = api::ai::NpcType::kGreenGatherer; };
 
-	    btnGreen = btn_factory.CreateButton(sf::Vector2f(250.f, static_cast<float>(window_.getSize().y)  - 50.f), "Green");
-            //btnGreen->OnReleasedLeft = []() {npc_adding_type = api::ai::NpcType::kGreen; };
+	    resource_manager_.LoadResources(
+                                            Resource::ResourceType::kWood,
+                                            tilemap_ptr_->GetCollectibles(TileMap::Tile::kWood), ChopEvent);
+
+	    resource_manager_.LoadResources(
+                    Resource::ResourceType::kFood,
+                    tilemap_ptr_->GetCollectibles(TileMap::Tile::kFood), ChopEvent);
+
+	    resource_manager_.LoadResources(
+                    Resource::ResourceType::kRock,
+                    tilemap_ptr_->GetCollectibles(TileMap::Tile::kRock), ChopEvent);
 
 	  }
 	}
@@ -84,6 +102,7 @@ namespace game{
 			  btnRed->HandleEvent(event, buttonsWasClicked);
 			  btnGreen->HandleEvent(event, buttonsWasClicked);
 
+			  tilemap_ptr_->HandleEvent(event, buttonsWasClicked);
                           //building_manager_.HandleEvent(event, buttonsWasClicked);
 			}
 
@@ -92,7 +111,6 @@ namespace game{
 			window_.clear();
 
 			tilemap_ptr_->Draw(window_);
-		        resources_.Draw(window_);
 		        npc_manager_.Draw(window_);
 		        building_manager_.Draw(window_);
 

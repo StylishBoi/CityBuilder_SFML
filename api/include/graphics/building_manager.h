@@ -7,12 +7,13 @@
 class BuildingManager : public TileMap {
 
   enum class Building {
-    kHouse,
-    kRestaurant,
+    kLumberHouse,
+    kMinerHouse,
+    kGathererHouse,
     kLength
   };
 
-  std::string_view files[static_cast<size_t>(Building::kLength)]{"building.png", "restaurant.png"};
+  std::string_view files[static_cast<size_t>(Building::kLength)]{"lumber_house.png", "miner_house.png", "gatherer_house.png"};
   core::experimental::AssetManager<sf::Texture, Building, "_assets/sprites"> textures;
 
   // Tilemap

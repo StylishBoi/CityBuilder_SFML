@@ -2,9 +2,11 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <random>
 
 #include "graphics/directions.h"
 #include "graphics/map_generation.h"
+#include "resources/resource.h"
 
 TileMap::TileMap()= default;
 
@@ -79,5 +81,25 @@ sf::Vector2f TileMap::TilePos(sf::Vector2i pos) {
 
   return {static_cast<float>(ceil(pos.x / kTileSize) * kTileSize),
           static_cast<float>(ceil(pos.y / kTileSize) * kTileSize)};
+
+}
+
+void TileMap::SetTile(int idx, Tile tile) {
+  if (idx > 0 && idx < tiles_.size()) {
+    tiles_[idx] = tile;
+  }
+}
+
+std::vector<int> TileMap::GetCollectibles(Tile search_tile){
+
+  std::vector<int> collectibles;
+
+  for (int tile_index = 0; tile_index < tiles_.size(); ++tile_index) {
+    if (tiles_[tile_index] == search_tile) {
+      collectibles.emplace_back(tile_index);
+    }
+  }
+
+  return collectibles;
 
 }

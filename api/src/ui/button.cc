@@ -20,7 +20,7 @@ Button::Button(const sf::Vector2f pos, std::string_view label,
   hoverSprite_.setPosition(pos);
   // hoverSprite_.setOrigin(hoverSprite_.getLocalBounds().getCenter());
 
-  label_.setCharacterSize(24);
+  label_.setCharacterSize(20);
   label_.setString(std::string(label));
   sf::FloatRect textRect = label_.getLocalBounds();
   label_.setOrigin(label_.getLocalBounds().getCenter());

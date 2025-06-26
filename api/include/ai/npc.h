@@ -31,9 +31,13 @@ namespace api::ai {
 
   public:
     void Setup(std::string_view name, std::string_view filename,
-               TileMap* tilemap, ResourceManager* resources);
+               TileMap* tilemap, sf::Vector2f& cantina_position,
+               std::vector<Resource> resources);
     void Update(float dt);
     void Draw(sf::RenderWindow &window) const;
+    void SetPosition(const sf::Vector2f& position) {
+      motor_->SetPosition(position);
+    }
 
     // Motion
     // void SetPath(const motion::Path &path);

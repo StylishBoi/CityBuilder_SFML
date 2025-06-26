@@ -2,6 +2,7 @@
 #define API_GRAPHICS_TILEMAP_H
 
 #include "assets/asset_manager.h"
+#include "ui/clickable.h"
 #include <SFML/Graphics.hpp>
 
 // Window variables
@@ -11,7 +12,7 @@ const static int kTileSize=16;
 
 using core::experimental::AssetManager;
 
-class TileMap{
+class TileMap : public api::ui::Clickable{
 public:
   enum class Tile {
     kGrass,
@@ -20,10 +21,12 @@ public:
     kSand,
     kRock,
     kNpc,
+    kWood,
+    kFood,
     kLength
   };
 
-  std::string_view files[static_cast<size_t>(Tile::kLength)]{"grass.png", "water.png", "flowers.png", "sand.png", "rock.png","npc.png"};
+  std::string_view files[static_cast<size_t>(Tile::kLength)]{"grass.png", "water.png", "flowers.png", "sand.png", "rock.png","npc.png", "wood.png", "food.png"};
 
 private:
   std::array<Tile, (kWindowWidth/kTileSize) * (kWindowHeight/kTileSize)> tiles_={};
@@ -32,16 +35,18 @@ private:
   std::vector<sf::Vector2f> walkables_;
 
 protected:
-  static sf::Vector2f ScreenPosition(int index);
   static int Index(sf::Vector2f screenPosition);
 
 public:
   explicit TileMap();
   void Setup();
   void Draw(sf::RenderWindow &window);
+  void SetTile(int, Tile);
 
+  static sf::Vector2f ScreenPosition(int index);
   static sf::Vector2f TilePos(sf::Vector2i);
 
   std::vector<sf::Vector2f> GetWalkables() const{ return walkables_; };
+  std::vector<int> GetCollectibles(Tile);
 };
 #endif
