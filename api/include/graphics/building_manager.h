@@ -16,13 +16,14 @@ class BuildingManager : public TileMap {
   core::experimental::AssetManager<sf::Texture, Building, "_assets/sprites"> textures;
 
   // Tilemap
-  const TileMap* tileMap_;
+  const TileMap* tileMap_ = nullptr;
 
 public:
   //Position
   std::vector<std::pair<Building, sf::Vector2f>> buildingPositions_;
 
   void Setup(const TileMap* tileMap);
+  void Add(sf::Vector2f position);
   void Draw(sf::RenderWindow &window);
 };
 #endif //BUILDING_MANAGER_H

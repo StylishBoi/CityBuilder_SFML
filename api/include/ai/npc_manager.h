@@ -20,9 +20,9 @@ namespace api::ai {
     std::vector<Npc> npcs_;
 
   public:
-    void Add(NpcType type, TileMap* tilemap, Resources* resources);
+    void Add(NpcType type, TileMap* tilemap, ResourceManager* resources);
     void Update(float dt);
-    void Draw(sf::RenderWindow &window);
+    void Draw(sf::RenderWindow &window) const;
 
   };
 }

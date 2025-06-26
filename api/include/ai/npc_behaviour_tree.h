@@ -3,8 +3,8 @@
 
 #include <memory>
 
+#include "../../../game/include/resources_manager.h"
 #include "ai/bt_node.h"
-#include "graphics/resources_manager.h"
 #include "graphics/tilemap.h"
 #include "motion/motor.h"
 #include "motion/path.h"
@@ -15,7 +15,7 @@ namespace api::ai {
     std::unique_ptr<core::ai::behaviour_tree::Node> bt_root_;
     motion::Motor *npc_motor_ = nullptr;
     TileMap *tilemap_ = nullptr;
-    Resources *resources_ = nullptr;
+    ResourceManager *resources_ = nullptr;
     motion::Path *path_ = nullptr;
 
 
@@ -47,7 +47,7 @@ namespace api::ai {
         motion::Motor* npc_motor,
         motion::Path* path,
         TileMap* tilemap,
-        Resources* resources);
+        ResourceManager* resources);
     void Update(float dt);
 
   };

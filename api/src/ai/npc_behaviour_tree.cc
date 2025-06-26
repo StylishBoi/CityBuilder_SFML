@@ -16,7 +16,14 @@ using namespace api::motion;
 namespace api::ai {
 
   void NpcBehaviourTree::SetRandomDestination() const {
-    static std::mt19937 gen{std::random_device{}()};
+    sf::Vector2f end = {320,240};
+
+    Path path = Astar::GetPath(kTileSize, npc_motor_->GetPosition(), end,
+                               this->tilemap_->GetWalkables());
+
+    this->path_->Fill(path.Points());
+    this->npc_motor_->SetDestination(path.StartPoint());
+    /*static std::mt19937 gen{std::random_device{}()};
     static std::uniform_int_distribution<size_t> dist(
         0, this->tilemap_->GetWalkables().size() - 1);
 
@@ -26,7 +33,7 @@ namespace api::ai {
                                this->tilemap_->GetWalkables());
 
     this->path_->Fill(path.Points());
-    this->npc_motor_->SetDestination(path.StartPoint());
+    this->npc_motor_->SetDestination(path.StartPoint());*/
   }
 
 void NpcBehaviourTree::SetResourceDestination() const {
@@ -146,7 +153,7 @@ Status NpcBehaviourTree::CheckWork() const {
   }
 
   void NpcBehaviourTree::SetupBehaviourTree(Motor* npc_motor, Path* path,
-                                            TileMap* tilemap, Resources* resources) {
+                                            TileMap* tilemap, ResourceManager* resources) {
     std::cout << "Setup Behaviour Tree\n";
 
     hunger_ = 0;

@@ -4,7 +4,7 @@
 
 namespace api::ai {
 
-void NpcManager::Add(NpcType type, TileMap* tilemap, Resources* resources) {
+void NpcManager::Add(NpcType type, TileMap* tilemap, ResourceManager* resources) {
   CreateNpc(npcs_, type, tilemap, resources);
 }
 
@@ -14,7 +14,7 @@ void NpcManager::Update(float dt) {
   }
 }
 
-void NpcManager::Draw(sf::RenderWindow& window) {
+void NpcManager::Draw(sf::RenderWindow& window) const {
   for (auto& npc : npcs_) {
     npc.Draw(window);
   }

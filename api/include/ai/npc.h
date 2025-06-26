@@ -21,6 +21,8 @@ namespace api::ai {
     std::unique_ptr<motion::Motor> motor_ = std::make_unique<motion::Motor>();
     std::unique_ptr<motion::Path> path_ = std::make_unique<motion::Path>();
 
+    sf::Vector2f home_position_;
+
     // name
     std::string name_;
     // World informations
@@ -29,9 +31,9 @@ namespace api::ai {
 
   public:
     void Setup(std::string_view name, std::string_view filename,
-               TileMap* tilemap, Resources* resources);
+               TileMap* tilemap, ResourceManager* resources);
     void Update(float dt);
-    void Draw(sf::RenderWindow &window);
+    void Draw(sf::RenderWindow &window) const;
 
     // Motion
     // void SetPath(const motion::Path &path);

@@ -40,6 +40,8 @@ public:
   void Setup();
   void Draw(sf::RenderWindow &window);
 
+  static sf::Vector2f TilePos(sf::Vector2i);
+
   std::vector<sf::Vector2f> GetWalkables() const{ return walkables_; };
 };
 #endif

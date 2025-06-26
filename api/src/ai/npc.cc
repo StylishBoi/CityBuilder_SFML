@@ -10,7 +10,7 @@ using namespace api::motion;
 namespace api::ai{
 
   void Npc::Setup(std::string_view name, std::string_view filename,
-                  TileMap* tilemap, Resources* resources) {
+                  TileMap* tilemap, ResourceManager* resources) {
 
       name_ = std::string(name);
 
@@ -51,7 +51,7 @@ namespace api::ai{
 
   }
 
-  void Npc::Draw(sf::RenderWindow &window){
+  void Npc::Draw(sf::RenderWindow &window) const {
     sf::Sprite sprite(texture_);
     sprite.setPosition(motor_->GetPosition());
     window.draw(sprite);

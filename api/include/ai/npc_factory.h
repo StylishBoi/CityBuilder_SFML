@@ -3,7 +3,7 @@
 #include "npc_manager.h"
 
 namespace api::ai {
-  inline void CreateNpc(std::vector<Npc> &npcs, const NpcType type, TileMap* tilemap, Resources* resources){
+  inline void CreateNpc(std::vector<Npc> &npcs, const NpcType type, TileMap* tilemap, ResourceManager* resources){
 
 
     switch (type) {

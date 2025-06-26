@@ -6,13 +6,13 @@
 #include "graphics/directions.h"
 #include "graphics/map_generation.h"
 
-TileMap::TileMap(){}
+TileMap::TileMap()= default;
 
 MapGeneration map_generation;
 Directions directions;
 
 void TileMap::Setup(){
-  directions.Setup();
+  Directions::Setup();
   textures.LoadAssets(files);
   tiles_.fill(Tile::kWater);
 
@@ -73,4 +73,11 @@ sf::Vector2f TileMap::ScreenPosition(const int index) {
 int TileMap::Index(const sf::Vector2f screenPosition) {
   return static_cast<int>(ceil(screenPosition.y/kTileSize)*kWindowWidth) +
          static_cast<int>(ceil(screenPosition.x/kTileSize));
+}
+
+sf::Vector2f TileMap::TilePos(sf::Vector2i pos) {
+
+  return {static_cast<float>(ceil(pos.x / kTileSize) * kTileSize),
+          static_cast<float>(ceil(pos.y / kTileSize) * kTileSize)};
+
 }

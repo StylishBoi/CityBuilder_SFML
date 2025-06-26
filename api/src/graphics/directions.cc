@@ -1,8 +1,4 @@
 #include "../../include/graphics/directions.h"
-
-#include <iostream>
-#include <random>
-
 #include "../../include/graphics/tilemap.h"
 #include "SFML/Graphics.hpp"
 

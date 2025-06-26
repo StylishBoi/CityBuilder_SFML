@@ -4,18 +4,19 @@
 #include "graphics/tilemap.h"
 #include "assets/asset_manager.h"
 
-class Resources : public TileMap {
+class ResourceManager : public TileMap {
   // Texture
   enum class Resource {
     kWood,
     kFood,
+    kRock,
     kLength
   };
-  std::string_view files[static_cast<size_t>(Resource::kLength)]{"wood.png", "food.png"};
+  std::string_view files[static_cast<size_t>(Resource::kLength)]{"wood.png", "food.png", "rock.png"};
   core::experimental::AssetManager<sf::Texture, Resource, "_assets/sprites"> textures;
 
   // Tilemap
-  const TileMap* tileMap_;
+  const TileMap* tileMap_ = nullptr;
 
 public:
   //Position
