@@ -73,7 +73,7 @@ namespace game{
                     npc_adding_type, tilemap_ptr_.get(),
                     TileMap::TilePos(sf::Mouse::getPosition(window_)),
                     resource_manager_);
-                building_manager_.Add(TileMap::TilePos(sf::Mouse::getPosition(window_)));
+                building_manager_.Add(TileMap::TilePos(sf::Mouse::getPosition(window_)), npc_adding_type);
               }
 	      npc_adding_type = api::ai::NpcType::kNone;
 	    };

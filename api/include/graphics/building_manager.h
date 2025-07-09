@@ -1,9 +1,11 @@
 #ifndef BUILDING_MANAGER_H
 #define BUILDING_MANAGER_H
 
-#include "graphics/tilemap.h"
-#include "assets/asset_manager.h"
 #include <SFML/Graphics.hpp>
+
+#include "ai/npc_manager.h"
+#include "assets/asset_manager.h"
+#include "graphics/tilemap.h"
 
 class BuildingManager : public TileMap {
 
@@ -25,7 +27,7 @@ public:
   std::vector<std::pair<Building, sf::Vector2f>> buildingPositions_;
 
   void Setup(const TileMap* tileMap);
-  void Add(sf::Vector2f position);
+  void Add(sf::Vector2f position, api::ai::NpcType npcType);
   void Draw(sf::RenderWindow &window);
 };
 #endif //BUILDING_MANAGER_H

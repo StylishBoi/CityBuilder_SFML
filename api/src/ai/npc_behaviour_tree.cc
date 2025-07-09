@@ -37,6 +37,7 @@ namespace api::ai {
     if (hunger_ >= 100) {
       std::cout << " : Yes, I need to find food\n";
 
+      SetDestination(home_position_);
       if (!tilemap_) {
         std::cout << "No tilemap\n";
         return Status::kFailure;
@@ -56,7 +57,6 @@ namespace api::ai {
       std::cout << " : No, I can wait\n";
       return Status::kFailure;
     }
-      SetDestination(home_position_);
   }
 
 
@@ -83,7 +83,8 @@ namespace api::ai {
   Status NpcBehaviourTree::Eat() {
     // No failure, until we have food storage system
     std::cout << "Current action : Eating"<<"\n";
-    hunger_ -= kHungerRate * tick_dt;
+    std::cout << "Hunger : " << hunger_ << "\n";
+    hunger_ -= kHungerRate;
     if (hunger_ > 0) {
       return Status::kRunning;
     } else {
@@ -103,7 +104,13 @@ namespace api::ai {
       std::uniform_int_distribution<size_t> dist(0, resources_.size() - 1);
 
       if (resources_[dist(gen)].GetQty() > 0) {
+        //Verify if the resource is already being worked on
+        if(current_resource_.GetWorkStatus()){
+          return Status::kFailure;
+        }
         current_resource_ = resources_[dist(gen)];
+        //Makes it so that resource is not picked again
+        current_resource_.SetWorkStatus(true);
         SetDestination(TileMap::ScreenPosition(current_resource_.GetTileIndex()));
 
         if (path_->IsValid())
@@ -118,12 +125,13 @@ namespace api::ai {
 
   Status NpcBehaviourTree::GetResource() {
     std::cout << "Current action : Getting resource"<<"\n";
+    std::cout << "Am I hungry ? " << std::to_string(hunger_);
       if (current_resource_.GetQty() <= 0) {
         return Status::kSuccess;
       }
 
       current_resource_.Exploit(kExploitRate * tick_dt);
-      hunger_ += kHungerRate * tick_dt;
+      hunger_ += kHungerRate;
       return Status::kRunning;
     }
 
