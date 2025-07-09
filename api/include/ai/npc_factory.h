@@ -5,7 +5,6 @@
 namespace api::ai {
   inline void CreateNpc(std::vector<Npc> &npcs, const NpcType type, TileMap* tilemap,  sf::Vector2f& start_position, ResourceManager& resources_manager){
 
-
     switch (type) {
       case NpcType::kBlueLumberjack:
         npcs.emplace_back();

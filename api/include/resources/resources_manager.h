@@ -4,6 +4,7 @@
 #include "assets/asset_manager.h"
 #include "graphics/tilemap.h"
 #include "resource.h"
+#include <SFML/Graphics.hpp>
 
 class ResourceManager : public TileMap {
 

@@ -1,5 +1,8 @@
 #include "resources/resources_manager.h"
 
+#include <random>
+#include <iostream>
+
 void ResourceManager::LoadResources(Resource::ResourceType type,
                                     std::vector<int> indexes,
                                     std::function<void(int, float)> OnChopEvent)
@@ -26,7 +29,10 @@ const std::vector<Resource> ResourceManager::GetResources(
 }
 
 void ResourceManager::Draw(sf::RenderWindow &window) {
+  sf::Sprite sprite(textures.GetAsset(Tile::kGrass));
   for (auto& resource : resources_) {
-    resource.Draw(window);
+    sprite.setTexture(textures.GetAsset(static_cast<TileMap::Tile>(resource.GetType())));
+    sprite.setPosition(ScreenPosition(resource.GetTileIndex()));
+    window.draw(sprite);
   }
 };

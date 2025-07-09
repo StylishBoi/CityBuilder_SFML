@@ -127,6 +127,7 @@ namespace game{
 			window_.clear();
 
 			tilemap_ptr_->Draw(window_);
+                        resource_manager_.Draw(window_);
 		        npc_manager_.Draw(window_);
 		        building_manager_.Draw(window_);
 

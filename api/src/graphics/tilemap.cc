@@ -55,6 +55,21 @@ void TileMap::Setup(){
     }
   }
 
+  for (int tileIndex = 0; tileIndex < tiles_.size(); ++tileIndex) {
+    if (tiles_[tileIndex] == Tile::kGrass || tiles_[tileIndex] == Tile::kFlowers) {
+      // Random chance to place resources
+      int random = rand() % 100;  // 0-99
+      if (random < 10) {  // 10% chance for wood
+        tiles_[tileIndex] = Tile::kWood;
+      } else if (random < 15) {  // 5% chance for food
+        tiles_[tileIndex] = Tile::kFood;
+      } else if (random < 20) {  // 5% chance for rock
+        tiles_[tileIndex] = Tile::kRock;
+      }
+    }
+  }
+
+
 }
 
 void TileMap::Draw(sf::RenderWindow &window){
