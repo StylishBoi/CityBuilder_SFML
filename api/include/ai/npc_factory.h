@@ -20,6 +20,7 @@ namespace api::ai {
         npcs.back().Setup("GREEN","npc_green.png", tilemap, start_position, resources_manager.GetResources(Resource::ResourceType::kWood));
         break;
       default:
+        std::cout << "Error: Npc type not found" << std::endl;
         break;
     }
     if (type == NpcType::kBlueLumberjack || type == NpcType::kRedMiner || type == NpcType::kGreenGatherer) {

@@ -8,6 +8,10 @@
 #include "graphics/map_generation.h"
 #include "resources/resource.h"
 
+#ifdef TRACY_ENABLE
+#include <tracy/Tracy.hpp>
+#endif
+
 TileMap::TileMap()= default;
 
 MapGeneration map_generation;
@@ -17,6 +21,8 @@ void TileMap::Setup(){
   Directions::Setup();
   textures.LoadAssets(files);
   tiles_.fill(Tile::kWater);
+
+  SetZone(sf::IntRect({0, 0}, sf::Vector2i(kWindowWidth, kWindowHeight)));
 
   //Sets up the grass island
   auto grassSpots=map_generation.Drunkard();
@@ -48,9 +54,14 @@ void TileMap::Setup(){
       std::cout<<pos.x<<", "<<pos.y<<std::endl;
     }
   }
+
 }
 
 void TileMap::Draw(sf::RenderWindow &window){
+    #ifdef TRACY_ENABLE
+      ZoneScoped;
+    #endif
+
   int tileIndex=0;
 
   sf::Sprite sprite(textures.GetAsset(Tile::kGrass));

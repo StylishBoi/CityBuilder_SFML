@@ -3,6 +3,7 @@
 #include <array>
 #include <iostream>
 #include <queue>
+#include <span>
 
 #include "motion/path.h"
 

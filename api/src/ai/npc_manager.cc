@@ -2,6 +2,10 @@
 
 #include "ai/npc_factory.h"
 
+#ifdef TRACY_ENABLE
+#include <tracy/Tracy.hpp>
+#endif
+
 namespace api::ai {
 
 void NpcManager::Add(NpcType type, TileMap* tilemap, sf::Vector2f start_position, ResourceManager& resources_manager) {
@@ -9,6 +13,9 @@ void NpcManager::Add(NpcType type, TileMap* tilemap, sf::Vector2f start_position
 }
 
 void NpcManager::Update(float dt) {
+#ifdef TRACY_ENABLE
+  ZoneScoped;
+#endif
   for (auto& npc : npcs_) {
     npc.Update(dt);
   }

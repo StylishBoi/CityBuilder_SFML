@@ -2,6 +2,7 @@
 #define RESOURCE_H
 
 #include <functional>
+#include <SFML/Graphics.hpp>
 
 class Resource {
 
@@ -21,6 +22,8 @@ private:
   double cut_time_ = 0;
 
 public:
+  void Draw(sf::RenderWindow &window) const;
+
   [[nodiscard]] ResourceType GetType() const;
   [[nodiscard]] int GetTileIndex() const;
   [[nodiscard]] float GetQty() const;

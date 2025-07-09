@@ -5,6 +5,11 @@ if(ENABLE_TESTING)
     list(APPEND VCPKG_MANIFEST_FEATURES "testing")
 endif(ENABLE_TESTING)
 
+option(ENABLE_PROFILING "Enable tracy" OFF)
+if(ENABLE_PROFILING)
+    list(APPEND VCPKG_MANIFEST_FEATURES "profiling")
+endif(ENABLE_PROFILING)
+
 project(CityBuilder)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -14,6 +19,10 @@ if(ENABLE_TESTING)
     enable_testing()
     find_package(GTest CONFIG REQUIRED)
 endif(ENABLE_TESTING)
+
+if(ENABLE_PROFILING)
+    find_package(Tracy CONFIG REQUIRED)
+endif(ENABLE_PROFILING)
 
 add_subdirectory(core/)
 add_subdirectory(api/)

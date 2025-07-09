@@ -6,6 +6,7 @@
 namespace api::ai {
 
   enum class NpcType {
+    kNone,
     kBlueLumberjack,
     kRedMiner,
     kGreenGatherer

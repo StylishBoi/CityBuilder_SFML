@@ -3,6 +3,7 @@
 
 #include "graphics/tilemap.h"
 #include "assets/asset_manager.h"
+#include <SFML/Graphics.hpp>
 
 class BuildingManager : public TileMap {
 

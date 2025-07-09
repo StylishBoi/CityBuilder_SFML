@@ -9,6 +9,9 @@
 #include "ui/button_factory.h"
 #include "ui/clickable.h"
 
+#ifdef TRACY_ENABLE
+#include <tracy/Tracy.hpp>
+#endif
 namespace game{
 	namespace{
 
@@ -28,8 +31,10 @@ namespace game{
 	std::unique_ptr<api::ui::Button> btnBlue;
 	std::unique_ptr<api::ui::Button> btnRed;
 	std::unique_ptr<api::ui::Button> btnGreen;
+        std::unique_ptr<api::ui::Button> btnExit;
 
-	api::ai::NpcType npc_adding_type = api::ai::NpcType::kBlueLumberjack;
+        //Makes so base click has no NPC
+	api::ai::NpcType npc_adding_type = api::ai::NpcType::kNone;
 
 
 
@@ -52,7 +57,7 @@ namespace game{
                              tilemap_ptr_.get(),
                              TileMap::TilePos(sf::Mouse::getPosition(window_)),
                              resource_manager_);
-	      npc_adding_type = api::ai::NpcType::kBlueLumberjack;
+	      npc_adding_type = api::ai::NpcType::kNone;
 	    };
 
 	    btnBlue = btn_factory.CreateButton(sf::Vector2f(50.f, static_cast<float>(window_.getSize().y) - 50.f), "Lumberjack");
@@ -64,9 +69,12 @@ namespace game{
 	    btnGreen = btn_factory.CreateButton(sf::Vector2f(250.f, static_cast<float>(window_.getSize().y)  - 50.f), "Gatherer");
             btnGreen->OnReleasedLeft = []() {npc_adding_type = api::ai::NpcType::kGreenGatherer; };
 
+            btnExit = btn_factory.CreateButton(sf::Vector2f(350.f, static_cast<float>(window_.getSize().y)  - 50.f), "Exit");
+            btnExit->OnReleasedLeft = []() { window_.close(); };
+
 	    resource_manager_.LoadResources(
-                                            Resource::ResourceType::kWood,
-                                            tilemap_ptr_->GetCollectibles(TileMap::Tile::kWood), ChopEvent);
+                Resource::ResourceType::kWood,
+                tilemap_ptr_->GetCollectibles(TileMap::Tile::kWood), ChopEvent);
 
 	    resource_manager_.LoadResources(
                     Resource::ResourceType::kFood,
@@ -86,12 +94,18 @@ namespace game{
 		//Start the game loop
 		while (window_.isOpen())
 		{
+                  #ifdef TRACY_ENABLE
+                  ZoneNamedN(game_loop_event, "Game loop", true);
+                  #endif
 		        //Reset the clock each frame
 		        const float deltaTime = clock_.restart().asSeconds();
 
 			//Process events
 			while (const std::optional event = window_.pollEvent())
 			{
+                          #ifdef TRACY_ENABLE
+                          ZoneNamedN(event_handling_event, "Event handling", true);
+                          #endif
 				//Close window: exit
 				if (event->is<sf::Event::Closed>()) {
 					window_.close();
@@ -101,6 +115,8 @@ namespace game{
 			  btnBlue->HandleEvent(event, buttonsWasClicked);
 			  btnRed->HandleEvent(event, buttonsWasClicked);
 			  btnGreen->HandleEvent(event, buttonsWasClicked);
+                          btnExit->HandleEvent(event, buttonsWasClicked);
+
 
 			  tilemap_ptr_->HandleEvent(event, buttonsWasClicked);
                           //building_manager_.HandleEvent(event, buttonsWasClicked);
@@ -117,8 +133,13 @@ namespace game{
 		        btnBlue->Draw(window_);
 		        btnRed->Draw(window_);
 		        btnGreen->Draw(window_);
+                        btnExit->Draw(window_);
 
 			window_.display();
+
+                        #ifdef TRACY_ENABLE
+                        FrameMark;
+                        #endif
 		}
 	}
 //1 - Make button to place house
