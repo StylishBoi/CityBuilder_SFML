@@ -48,14 +48,6 @@ void TileMap::Setup(){
   }
 
   for (int tileIndex = 0; tileIndex < tiles_.size(); ++tileIndex) {
-    if (tiles_[tileIndex]==Tile::kGrass || tiles_[tileIndex]==Tile::kFlowers || tiles_[tileIndex]==Tile::kSand) {
-      sf::Vector2f pos = ScreenPosition(tileIndex);
-      walkables_.push_back(pos);
-      std::cout<<pos.x<<", "<<pos.y<<std::endl;
-    }
-  }
-
-  for (int tileIndex = 0; tileIndex < tiles_.size(); ++tileIndex) {
     if (tiles_[tileIndex] == Tile::kGrass || tiles_[tileIndex] == Tile::kFlowers) {
       // Random chance to place resources
       int random = rand() % 100;  // 0-99
@@ -66,6 +58,18 @@ void TileMap::Setup(){
       } else if (random < 20) {  // 5% chance for rock
         tiles_[tileIndex] = Tile::kRock;
       }
+    }
+  }
+  for (int tileIndex = 0; tileIndex < tiles_.size(); ++tileIndex) {
+    if (tiles_[tileIndex]==Tile::kGrass ||
+        tiles_[tileIndex]==Tile::kFlowers ||
+        tiles_[tileIndex]==Tile::kSand ||
+        tiles_[tileIndex]==Tile::kWood ||
+        tiles_[tileIndex]==Tile::kFood ||
+        tiles_[tileIndex]==Tile::kRock) {
+      sf::Vector2f pos = ScreenPosition(tileIndex);
+      walkables_.push_back(pos);
+      std::cout<<pos.x<<", "<<pos.y<<std::endl;
     }
   }
 

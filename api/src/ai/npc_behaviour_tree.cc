@@ -3,6 +3,7 @@
 #include <functional>
 #include <iostream>
 #include <random>
+#include <utility>
 
 #include "ai/bt_action.h"
 #include "ai/bt_selector.h"
@@ -17,17 +18,20 @@ namespace api::ai {
 
   void NpcBehaviourTree::SetDestination(const sf::Vector2f& destination) const {
 
-    Path path = Astar::GetPath(64, npc_motor_->GetPosition(), destination,
+    // Try to find a path to the destination using A* pathfinding
+    Path path = Astar::GetPath(16, npc_motor_->GetPosition(), destination,
                                                        this->tilemap_->GetWalkables());
     if (path.IsValid()) {
+      // Fill the NPC's path with the found waypoints
       this->path_->Fill(path.Points());
+      // Set the first waypoint as the immediate destination
       this->npc_motor_->SetDestination(path.StartPoint());
     }
-
+    std::cout<<"That shit did not work";
   }
 
   Status NpcBehaviourTree::CheckHunger() const {
-    std::cout << "this ? = " << this << "\n";
+    std::cout << "Current action : Checking hunger"<<"\n";
     std::cout << "Am I hungry ? " << std::to_string(hunger_);
 
     if (hunger_ >= 100) {
@@ -58,9 +62,11 @@ namespace api::ai {
 
 
   Status NpcBehaviourTree::Move() const {
+    std::cout << "Current action : Moving"<<"\n";
     // if destination not reachable, return failure
     if (!path_->IsValid()) {
-      std::cout << "Not reachable" << path_->IsValid() << "\n";
+      std::cout << "Not reachable " << path_->IsValid() << "\n";
+      std::cout << path_->StartPoint().x << ":" << path_->StartPoint().y << "\n";
       return Status::kFailure;
     } else {
       std::cout << "I'm moving" << "\n";
@@ -76,6 +82,7 @@ namespace api::ai {
 
   Status NpcBehaviourTree::Eat() {
     // No failure, until we have food storage system
+    std::cout << "Current action : Eating"<<"\n";
     hunger_ -= kHungerRate * tick_dt;
     if (hunger_ > 0) {
       return Status::kRunning;
@@ -85,6 +92,7 @@ namespace api::ai {
   }
 
   Status NpcBehaviourTree::PickResource() {
+    std::cout << "Current action : Picking resource"<<"\n";
 
       if (resources_.empty()) {
         std::cout << "No resources available\n";
@@ -109,6 +117,7 @@ namespace api::ai {
     }
 
   Status NpcBehaviourTree::GetResource() {
+    std::cout << "Current action : Getting resource"<<"\n";
       if (current_resource_.GetQty() <= 0) {
         return Status::kSuccess;
       }
@@ -119,7 +128,7 @@ namespace api::ai {
     }
 
   Status NpcBehaviourTree::Idle() {
-    hunger_ += kHungerRate * 5;
+    hunger_ += kHungerRate * tick_dt;
     std::cout << "I'm sleeping" << "\n";
     return Status::kSuccess;
   }
@@ -135,7 +144,7 @@ namespace api::ai {
     path_ = path;
     tilemap_ = tilemap;
     home_position_ = home_position;
-    resources_ = resources;
+    resources_ = std::move(resources);
 
     auto feedSequence = std::make_unique<Sequence>();
     feedSequence->AddChild(std::make_unique<Action>([this]() { return CheckHunger(); }));

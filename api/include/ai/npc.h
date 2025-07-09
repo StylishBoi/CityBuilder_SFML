@@ -31,7 +31,7 @@ namespace api::ai {
 
   public:
     void Setup(std::string_view name, std::string_view filename,
-               TileMap* tilemap, sf::Vector2f& cantina_position,
+               TileMap* tilemap, sf::Vector2f& spawn_position,
                std::vector<Resource> resources);
     void Update(float dt);
     void Draw(sf::RenderWindow &window) const;

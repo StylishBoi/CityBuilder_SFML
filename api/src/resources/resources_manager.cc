@@ -12,6 +12,7 @@ void ResourceManager::LoadResources(Resource::ResourceType type,
     resources_.back().SetType(type);
     resources_.back().SetIndex(index);
     resources_.back().SetQuantity(10);
+    resources_.back().SetWorkStatus(false);
     resources_.back().OnChopRessource_ = OnChopEvent;
   }
 }

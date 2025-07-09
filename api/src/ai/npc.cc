@@ -10,9 +10,9 @@ using namespace api::motion;
 namespace api::ai{
 
   void Npc::Setup(std::string_view name, std::string_view filename,
-                  TileMap* tilemap, sf::Vector2f& home_position, std::vector<Resource> resources) {
+                  TileMap* tilemap, sf::Vector2f& spawn_position, std::vector<Resource> resources) {
 
-      name_ = std::string(name);
+          name_ = std::string(name);
 
       // Find lighter concat for string view
       if(!texture_.loadFromFile("_assets/sprites/" + std::string(filename))) {
@@ -24,9 +24,11 @@ namespace api::ai{
 
       std::cout << "Setup " << name_ << " -- -- -- -- -- -- -- -- -- -- -- -- -- " << std::endl;
 
-      bt_tree_->SetupBehaviourTree(motor_.get(), path_.get(), tilemap, home_position, resources);
+      bt_tree_->SetupBehaviourTree(motor_.get(), path_.get(), tilemap,
+                                   spawn_position, resources);
 
-      motor_->SetPosition({320, 240});
+      home_position_= spawn_position;
+      motor_->SetPosition(home_position_);
       motor_->SetSpeed(kMovingSpeed);
 
   }
@@ -38,6 +40,10 @@ namespace api::ai{
     std::cout << " -- -- -- -- -- -- -- -- -- -- -- -- -- \n";
     std::cout << "Update " << name_ << "\n";
     std::cout << " -- -- -- -- -- -- -- -- -- -- -- -- -- \n";
+
+    if (!path_->IsValid()) {
+      std::cout << "NPC " << name_ << " has no valid path\n";
+    }
 
     // -------------------
     if (path_->IsValid()){
@@ -56,10 +62,4 @@ namespace api::ai{
     sprite.setPosition(motor_->GetPosition());
     window.draw(sprite);
   }
-
-  // void Npc::SetPath(const Path& path){
-  //     path_ = path;
-  //     motor_.SetDestination(path_.StartPoint());
-  // }
-
 }

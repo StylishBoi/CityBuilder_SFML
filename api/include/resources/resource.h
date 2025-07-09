@@ -17,6 +17,7 @@ public:
 private:
   int tile_index_ = 0;
   float quantity_ = 0;
+  bool isBeingWorkedOn;
   ResourceType type_ = ResourceType::kNone;
   double cut_time_ = 0;
 
@@ -24,10 +25,12 @@ public:
   [[nodiscard]] ResourceType GetType() const;
   [[nodiscard]] int GetTileIndex() const;
   [[nodiscard]] float GetQty() const;
+  [[nodiscard]] bool GetWorkStatus() const;
 
   void SetType(ResourceType type);
   void SetIndex(int index);
   void SetQuantity(float quantity);
+  void SetWorkStatus(bool used);
 
   void Exploit(float);
 
@@ -44,6 +47,9 @@ inline void Resource::SetIndex(int index){
 inline void Resource::SetQuantity(float quantity){
   quantity_ = quantity;
 }
+inline void Resource::SetWorkStatus(bool used){
+  isBeingWorkedOn = used;
+}
 
 inline Resource::ResourceType Resource::GetType() const{
   return type_;
@@ -53,6 +59,9 @@ inline int Resource::GetTileIndex() const {
 }
 inline float Resource::GetQty() const {
   return quantity_;
+}
+inline bool Resource::GetWorkStatus() const {
+  return isBeingWorkedOn;
 }
 
 

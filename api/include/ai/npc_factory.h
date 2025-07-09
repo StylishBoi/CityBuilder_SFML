@@ -12,11 +12,11 @@ namespace api::ai {
         break;
       case NpcType::kRedMiner:
         npcs.emplace_back();
-        npcs.back().Setup("RED", "npc_red.png", tilemap, start_position, resources_manager.GetResources(Resource::ResourceType::kWood));
+        npcs.back().Setup("RED", "npc_red.png", tilemap, start_position, resources_manager.GetResources(Resource::ResourceType::kRock));
         break;
       case NpcType::kGreenGatherer:
         npcs.emplace_back();
-        npcs.back().Setup("GREEN","npc_green.png", tilemap, start_position, resources_manager.GetResources(Resource::ResourceType::kWood));
+        npcs.back().Setup("GREEN","npc_green.png", tilemap, start_position, resources_manager.GetResources(Resource::ResourceType::kFood));
         break;
       default:
         std::cout << "Error: Npc type not found" << std::endl;
