@@ -11,12 +11,12 @@
 namespace api::ui {
   class Button : public Clickable{
     sf::Sprite sprite_;
-    sf::Sprite hoverSprite_;
+    sf::Sprite hover_sprite_;
     sf::Text label_;
 
   public:
-    Button(sf::Vector2f pos, std::string_view label, const sf::Texture &t, const sf::Texture &hover_t, const sf::Font& font);
-    void Draw(sf::RenderWindow &window) const;
+    Button(sf::Vector2f pos, std::string_view label, const sf::Texture& texture, const sf::Texture& hover_texture, const sf::Font& font);
+    void Draw(sf::RenderWindow& window) const;
   };
 
 }

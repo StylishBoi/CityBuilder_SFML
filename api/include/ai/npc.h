@@ -25,9 +25,6 @@ namespace api::ai {
 
     // name
     std::string name_;
-    // World informations
-    // Tilemap
-    //const TileMap *tileMap_;
 
   public:
     void Setup(std::string_view name, std::string_view filename,

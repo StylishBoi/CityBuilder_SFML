@@ -1,5 +1,5 @@
-#ifndef NPC_MANAGER_H
-#define NPC_MANAGER_H
+#ifndef AI_NPC_MANAGER_H_
+#define AI_NPC_MANAGER_H_
 
 #include "ai/npc.h"
 
@@ -18,8 +18,8 @@ namespace api::ai {
   public:
     void Add(NpcType type, TileMap* tilemap, sf::Vector2f start_position, ResourceManager& resources_manager);
     void Update(float dt);
-    void Draw(sf::RenderWindow &window);
+    void Draw(sf::RenderWindow& window);
 
   };
 }
-#endif //NPC_MANAGER_H
+#endif  // AI_NPC_MANAGER_H_

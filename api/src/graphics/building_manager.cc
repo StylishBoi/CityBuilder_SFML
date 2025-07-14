@@ -7,7 +7,7 @@ void BuildingManager::Setup(const TileMap* tileMap) {
 }
 
 void BuildingManager::Add(sf::Vector2f position, api::ai::NpcType npcType) {
-  auto building_type = Building::kLumberHouse;
+  auto building_type = Building::kNone;
 
   switch(npcType){
     case api::ai::NpcType::kBlueLumberjack:
@@ -19,8 +19,8 @@ void BuildingManager::Add(sf::Vector2f position, api::ai::NpcType npcType) {
     case api::ai::NpcType::kGreenGatherer:
       building_type = Building::kGathererHouse;
       break;
-    case api::ai::NpcType::kNone:
-      break;
+    default:
+      return;
   }
   buildingPositions_.emplace_back(building_type,position);
 }
@@ -35,4 +35,13 @@ void BuildingManager::Draw(sf::RenderWindow &window){
     sprite.setTexture(textures.GetAsset(building));
     window.draw(sprite);
   }
+}
+
+bool BuildingManager::HasBuildingAt(const sf::Vector2f &position) const {
+  for (auto [building, pos] : buildingPositions_) {
+    if (pos == position) {
+      return true;
+    }
+  }
+  return false;
 }

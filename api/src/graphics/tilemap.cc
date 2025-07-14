@@ -6,7 +6,7 @@
 
 #include "graphics/directions.h"
 #include "graphics/map_generation.h"
-#include "resources/resource.h"
+#include "gameplay/resource.h"
 
 #ifdef TRACY_ENABLE
 #include <tracy/Tracy.hpp>
@@ -49,7 +49,7 @@ void TileMap::Setup(){
 
   for (int tileIndex = 0; tileIndex < tiles_.size(); ++tileIndex) {
     if (tiles_[tileIndex] == Tile::kGrass || tiles_[tileIndex] == Tile::kFlowers) {
-      // Random chance to place resources
+      // Random chance to place gameplay
       int random = rand() % 100;  // 0-99
       if (random < 10) {  // 10% chance for wood
         tiles_[tileIndex] = Tile::kWood;
@@ -69,7 +69,6 @@ void TileMap::Setup(){
         tiles_[tileIndex]==Tile::kRock) {
       sf::Vector2f pos = ScreenPosition(tileIndex);
       walkables_.push_back(pos);
-      std::cout<<pos.x<<", "<<pos.y<<std::endl;
     }
   }
 

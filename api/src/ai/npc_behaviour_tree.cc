@@ -84,7 +84,7 @@ namespace api::ai {
     // No failure, until we have food storage system
     std::cout << "Current action : Eating"<<"\n";
     std::cout << "Hunger : " << hunger_ << "\n";
-    hunger_ -= kHungerRate;
+    hunger_ -= (kHungerRate * tick_dt_)*5;
     if (hunger_ > 0) {
       return Status::kRunning;
     } else {
@@ -95,23 +95,25 @@ namespace api::ai {
   Status NpcBehaviourTree::PickResource() {
     std::cout << "Current action : Picking resource"<<"\n";
 
-      if (resources_.empty()) {
-        std::cout << "No resources available\n";
+      if (resources_->empty()) {
+        std::cout << resources_->size() << " gameplay are empty" << "\n";
         return Status::kFailure;
       }
 
       std::mt19937 gen{std::random_device{}()};
-      std::uniform_int_distribution<size_t> dist(0, resources_.size() - 1);
+      std::uniform_int_distribution<size_t> dist(0, resources_->size() - 1);
+      size_t resourceIndex = dist(gen);
 
-      if (resources_[dist(gen)].GetQty() > 0) {
+      if ((*resources_)[resourceIndex].GetQty() > 0) {
+        current_resource_ = &(*resources_)[resourceIndex];
+
         //Verify if the resource is already being worked on
-        if(current_resource_.GetWorkStatus()){
+        if(current_resource_->GetWorkStatus() || current_resource_->GetDespawnStatus()){
           return Status::kFailure;
         }
-        current_resource_ = resources_[dist(gen)];
         //Makes it so that resource is not picked again
-        current_resource_.SetWorkStatus(true);
-        SetDestination(TileMap::ScreenPosition(current_resource_.GetTileIndex()));
+        current_resource_->SetWorkStatus(true);
+        SetDestination(TileMap::ScreenPosition(current_resource_->GetTileIndex()));
 
         if (path_->IsValid())
           return Status::kSuccess;
@@ -125,26 +127,38 @@ namespace api::ai {
 
   Status NpcBehaviourTree::GetResource() {
     std::cout << "Current action : Getting resource"<<"\n";
-    std::cout << "Am I hungry ? " << std::to_string(hunger_);
-      if (current_resource_.GetQty() <= 0) {
+
+    if(!current_resource_){
+      return Status::kFailure;
+    }
+
+    std::cout << "Am I hungry ? " << std::to_string(hunger_)<<"\n";
+      if (current_resource_->GetQty() <= 0) {
+        current_resource_->SetWorkStatus(false);
+        current_resource_->SetDespawnStatus(true);
         return Status::kSuccess;
       }
 
-      current_resource_.Exploit(kExploitRate * tick_dt);
-      hunger_ += kHungerRate;
+      current_resource_->Exploit(kExploitRate * tick_dt_);
+      hunger_ += kHungerRate * tick_dt_;
       return Status::kRunning;
     }
 
   Status NpcBehaviourTree::Idle() {
-    hunger_ += kHungerRate * tick_dt;
+    hunger_ += kHungerRate * tick_dt_;
     std::cout << "I'm sleeping" << "\n";
     return Status::kSuccess;
   }
 
   void NpcBehaviourTree::SetupBehaviourTree(Motor* npc_motor, Path* path,
                                             TileMap* tilemap, sf::Vector2f home_position,
-                                            std::vector<Resource> resources) {
-    std::cout << "Setup Behaviour Tree\n";
+                                            std::vector<Resource>* resources) {
+    if (!resources) {
+      std::cout << "Received null gameplay pointer\n";
+    } else {
+      std::cout << "Received gameplay vector with " << resources->size() << " elements\n";
+    }
+
 
     hunger_ = 0;
 
@@ -152,7 +166,7 @@ namespace api::ai {
     path_ = path;
     tilemap_ = tilemap;
     home_position_ = home_position;
-    resources_ = std::move(resources);
+    resources_ = resources;
 
     auto feedSequence = std::make_unique<Sequence>();
     feedSequence->AddChild(std::make_unique<Action>([this]() { return CheckHunger(); }));
@@ -173,8 +187,8 @@ namespace api::ai {
     bt_root_ = std::move(selector);
   }
 
-  void NpcBehaviourTree::Update(float dt) {
-    tick_dt = dt;
+  void NpcBehaviourTree::Update(float delta_time) {
+    tick_dt_ = delta_time;
     bt_root_->Tick();
   }
 }  // namespace api::ai

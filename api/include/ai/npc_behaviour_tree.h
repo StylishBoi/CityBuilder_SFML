@@ -1,9 +1,9 @@
-#ifndef NPC_BEHAVIOUR_TREE_H
-#define NPC_BEHAVIOUR_TREE_H
+#ifndef AI_NPC_BEHAVIOUR_TREE_H_
+#define AI_NPC_BEHAVIOUR_TREE_H_
 
 #include <memory>
 
-#include "../resources/resources_manager.h"
+#include "../gameplay/resources_manager.h"
 #include "ai/bt_node.h"
 #include "graphics/tilemap.h"
 #include "motion/motor.h"
@@ -30,17 +30,17 @@ namespace api::ai {
     [[nodiscard]] core::ai::behaviour_tree::Status Idle();
 
     // Behaviour Constants
-    static constexpr float kHungerRate = 2.f;
+    static constexpr float kHungerRate = 5.f;
     static constexpr float kExploitRate = 1.f;
 
     // Behaviours
     float hunger_ = 0.0f;
-    bool resourceAvailable_ = true;
-    float tick_dt=0;
+    bool resource_available_ = true;
+    float tick_dt_ =0;
 
     sf::Vector2f home_position_;
-    std::vector<Resource> resources_;
-    Resource current_resource_;
+    std::vector<Resource>* resources_ = nullptr;
+    Resource* current_resource_=nullptr;
 
   public:
 
@@ -49,10 +49,10 @@ namespace api::ai {
         motion::Path* path,
         TileMap* tilemap,
         sf::Vector2f home_position,
-        std::vector<Resource> resources);
-    void Update(float dt);
+        std::vector<Resource>* resources);
+    void Update(float delta_time);
 
   };
 }
 
-#endif //NPC_BEHAVIOUR_TREE_H
+#endif  // AI_NPC_BEHAVIOUR_TREE_H_

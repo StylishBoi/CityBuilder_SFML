@@ -10,13 +10,14 @@
 class BuildingManager : public TileMap {
 
   enum class Building {
+    kNone,
     kLumberHouse,
     kMinerHouse,
     kGathererHouse,
     kLength
   };
 
-  std::string_view files[static_cast<size_t>(Building::kLength)]{"lumber_house.png", "miner_house.png", "gatherer_house.png"};
+  std::string_view files[static_cast<size_t>(Building::kLength)]{"empty.png","lumber_house.png", "miner_house.png", "gatherer_house.png"};
   core::experimental::AssetManager<sf::Texture, Building, "_assets/sprites"> textures;
 
   // Tilemap
@@ -29,5 +30,7 @@ public:
   void Setup(const TileMap* tileMap);
   void Add(sf::Vector2f position, api::ai::NpcType npcType);
   void Draw(sf::RenderWindow &window);
+  bool HasBuildingAt(const sf::Vector2f& position) const;
+
 };
 #endif //BUILDING_MANAGER_H

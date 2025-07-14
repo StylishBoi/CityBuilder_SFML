@@ -25,7 +25,7 @@ namespace api::ai{
       std::cout << "Setup " << name_ << " -- -- -- -- -- -- -- -- -- -- -- -- -- " << std::endl;
 
       bt_tree_->SetupBehaviourTree(motor_.get(), path_.get(), tilemap,
-                                   spawn_position, resources);
+                                   spawn_position, &resources);
 
       home_position_= spawn_position;
       motor_->SetPosition(home_position_);

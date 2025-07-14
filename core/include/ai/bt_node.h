@@ -1,8 +1,8 @@
-#ifndef BT_NODE_H
-#define BT_NODE_H
+#ifndef AI_BT_NODE_H_
+#define AI_BT_NODE_H_
 
-namespace core::ai{
-  namespace behaviour_tree {
+namespace core::ai {
+namespace behaviour_tree {
 
   //The status that all nodes will be following
     enum class Status {
@@ -22,4 +22,4 @@ namespace core::ai{
     };
   }
 }
-#endif //BT_NODE_H
+#endif  // AI_BT_NODE_H_
