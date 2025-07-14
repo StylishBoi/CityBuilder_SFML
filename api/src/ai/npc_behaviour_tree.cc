@@ -10,6 +10,7 @@
 #include "ai/bt_sequence.h"
 #include "motion/AStar.h"
 #include "motion/path.h"
+#include "gameplay/economy_manager.h"
 
 using namespace core::ai::behaviour_tree;
 using namespace api::motion;
@@ -88,6 +89,7 @@ namespace api::ai {
     if (hunger_ > 0) {
       return Status::kRunning;
     } else {
+      std::cout << "I'm full" << "\n";
       return Status::kSuccess;
     }
   }

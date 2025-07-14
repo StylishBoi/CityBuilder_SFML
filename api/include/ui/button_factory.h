@@ -11,13 +11,13 @@
 
 namespace api::ui {
 class ButtonFactory {
-  enum class Sprite { kEmpty, kBgBtn, kHoverBtn, kLength };
+  enum class ButtonSprite { kEmpty, kBgBtn, kHoverBtn, kLength };
 
-  std::array<std::string_view, static_cast<size_t>(Sprite::kLength)> files_ =
+  std::array<std::string_view, static_cast<size_t>(ButtonSprite::kLength)> files_ =
           {"empty.png", "button.png", "button_hover.png"};
 
   sf::Font font;
-  core::experimental::AssetManager<sf::Texture, Sprite, "_assets/sprites"> textures_;
+  core::experimental::AssetManager<sf::Texture, ButtonSprite, "_assets/sprites"> textures_;
 
 public:
   ButtonFactory(){
@@ -31,7 +31,7 @@ public:
     return std::move(
         std::make_unique<api::ui::Button>(
             pos, label,
-            textures_.GetAsset(Sprite::kBgBtn), textures_.GetAsset(Sprite::kHoverBtn),
+            textures_.GetAsset(ButtonSprite::kBgBtn), textures_.GetAsset(ButtonSprite::kHoverBtn),
             font)
     );
   }
