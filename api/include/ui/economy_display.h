@@ -38,7 +38,7 @@ class EconomyDisplay : public sf::Drawable {
   size_t food_economy_amount_;
 
  public:
-  explicit EconomyDisplay(EconomyManager& economy);
+  void Setup();
   void SetupUiEconomyText();
   void SetupUiEconomyImage();
   void Draw(sf::RenderWindow& window) const;

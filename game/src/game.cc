@@ -1,10 +1,10 @@
 #include "game.h"
 
 #include "gameplay/resources_manager.h"
-#include "SFML/Graphics.hpp"
 #include "ai/npc_manager.h"
 #include "graphics/building_manager.h"
 #include "graphics/tilemap.h"
+
 #include "ui/button.h"
 #include "ui/button_factory.h"
 #include "ui/clickable.h"
@@ -63,6 +63,7 @@ namespace {
 
     tilemap_ptr_->Setup();
     building_manager_.Setup(tilemap_ptr_.get());
+    //economy_display_->Setup();
 
     resource_manager_.LoadResources(
         Resource::ResourceType::kWood,
@@ -81,12 +82,15 @@ namespace {
 
       auto walkables = tilemap_ptr_->GetWalkables();
       if (std::find(walkables.begin(), walkables.end(), clickPos) != walkables.end()) {
-        npc_manager_.Add(
-            npc_adding_type, tilemap_ptr_.get(),
-            TileMap::TilePos(sf::Mouse::getPosition(window_)),
-            resource_manager_);
-        building_manager_.Add(TileMap::TilePos(sf::Mouse::getPosition(window_)), npc_adding_type);
-      }
+        //Verify if there is a building at the position
+        if (!building_manager_.HasBuildingAt(clickPos)){
+          npc_manager_.Add(
+              npc_adding_type, tilemap_ptr_.get(),
+              TileMap::TilePos(sf::Mouse::getPosition(window_)),
+              resource_manager_);
+          building_manager_.Add(TileMap::TilePos(sf::Mouse::getPosition(window_)), npc_adding_type);
+        }
+        }
       npc_adding_type = api::ai::NpcType::kNone;
     };
 

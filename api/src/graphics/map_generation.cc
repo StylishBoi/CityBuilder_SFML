@@ -6,13 +6,13 @@
 #include <vector>
 
 
-std::array<int, 150> MapGeneration::Drunkard() {
+std::array<int, 250> MapGeneration::Drunkard() {
   //Drunkard generation variables
 
   //Setup randomness
   srand(time(0));
 
-  std::array<int, 150>grassPositions={};
+  std::array<int, 250>grassPositions={};
   int currentIter=0;
   int tilesConvertedToGrass=0;
 
@@ -49,7 +49,7 @@ std::array<int, 150> MapGeneration::Drunkard() {
     for (auto step : generationPositions) {
       grassPositions[tilesConvertedToGrass]=(step.x/kTileSize)+((step.y/kTileSize)*40);
       tilesConvertedToGrass++;
-      if (tilesConvertedToGrass >= 150) {
+      if (tilesConvertedToGrass >= generationLimit) {
         return grassPositions;
       }
     }

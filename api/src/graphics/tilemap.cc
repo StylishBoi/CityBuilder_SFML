@@ -35,6 +35,10 @@ void TileMap::Setup(){
   for (auto newPosition : newPositions) {
     tiles_[newPosition]=Tile::kGrass;
   }
+  newPositions=map_generation.MapThickening();
+  for (auto newPosition : newPositions) {
+    tiles_[newPosition]=Tile::kGrass;
+  }
 
   //Fill up potential holes on the island
   auto holePositions=map_generation.HoleFilling();

@@ -8,15 +8,11 @@
 
 class ResourceManager : public TileMap {
 
-  std::vector<Resource> resources_;
-  std::vector<Resource> wood_resources_;
-  std::vector<Resource> stone_resources_;
-  std::vector<Resource> food_resources_;
+  std::vector<std::unique_ptr<Resource>> resources_;
 
-  // Tilemap
 public:
   void LoadResources(Resource::ResourceType type, std::vector<int> indexes, std::function<void(int, float)> on_chop_event);
-  [[nodiscard]] std::vector<Resource> GetResources(Resource::ResourceType type) const;
+  [[nodiscard]] std::vector<Resource*> GetResources(Resource::ResourceType type) const;
   void Draw(sf::RenderWindow& window);
 };
 

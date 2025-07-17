@@ -14,8 +14,6 @@ Button::Button(const sf::Vector2f pos, std::string_view label,
                            static_cast<int>(sprite_.getTexture().getSize().y)};
   sf::Vector2i int_pos = {static_cast<int>(pos.x), static_cast<int>(pos.y)};
 
-  std::cout << "Texture size : " << int_size.x << ":" << int_size.y << "\n";
-
   sprite_.setPosition(pos);
   // sprite_.setOrigin(sprite_.getLocalBounds().getCenter());
   hover_sprite_.setPosition(pos);

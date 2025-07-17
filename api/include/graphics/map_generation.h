@@ -6,7 +6,8 @@ class MapGeneration
 {
 private:
   //PCG Generation
-  int walkIterMax=60;
+  int walkIterMax=200;
+  int generationLimit=250;
   int walkDistanceMin=3;
   int walkDistanceMax=5;
   int walkBounds=kTileSize*3;
@@ -17,7 +18,7 @@ private:
   int numberOfHeightTiles = static_cast<int>(kWindowHeight/kTileSize);
 
 public:
-  std::array<int, 150> Drunkard();
+  std::array<int, 250> Drunkard();
   std::vector<int> MapThickening();
   std::vector<int> HoleFilling();
   std::vector<int> SandUpdate();

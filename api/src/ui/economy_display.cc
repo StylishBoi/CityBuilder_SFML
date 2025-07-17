@@ -59,7 +59,7 @@ void EconomyDisplay::SetupUiEconomyImage() {
   // Background image setup
   background_shape_.setPosition(wood_shape_position);
   background_shape_.setColor(color);
-  background_shape_.setTexture(textures_.GetAsset(EconomySprite::kEmpty);
+  background_shape_.setTexture(textures_.GetAsset(EconomySprite::kEmpty));
 }
 
 // draw
@@ -72,7 +72,7 @@ void EconomyDisplay::Draw(sf::RenderWindow& window) const {
 }
 
 // constructor
-EconomyDisplay::EconomyDisplay(EconomyManager& economy){
+void EconomyDisplay::Setup(){
   SetupUiEconomyImage();
   SetupUiEconomyText();
 }

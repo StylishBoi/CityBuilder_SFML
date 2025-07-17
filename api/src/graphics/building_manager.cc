@@ -38,8 +38,10 @@ void BuildingManager::Draw(sf::RenderWindow &window){
 }
 
 bool BuildingManager::HasBuildingAt(const sf::Vector2f &position) const {
+
   for (auto [building, pos] : buildingPositions_) {
-    if (pos == position) {
+
+    if (pos.x == position.x && pos.y == position.y) {
       return true;
     }
   }
