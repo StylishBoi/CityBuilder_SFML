@@ -19,7 +19,7 @@ class EconomyDisplay : public sf::Drawable {
   const std::array<std::string_view, static_cast<size_t>(EconomySprite::kLength)> files_ =
       {"empty.png", "wood.png", "stone.png", "food.png"};
 
-  sf::Font font;
+  sf::Font font_;
   core::experimental::AssetManager<sf::Texture, EconomySprite, "_assets/sprites"> textures_;
 
   sf::Text wood_economy_text_;
@@ -34,13 +34,14 @@ class EconomyDisplay : public sf::Drawable {
   EconomyManager& economy_manager_;
 
   size_t wood_economy_amount_;
-  size_t stone_economy_amount_;;
+  size_t stone_economy_amount_;
   size_t food_economy_amount_;
 
  public:
   void Setup();
   void SetupUiEconomyText();
   void SetupUiEconomyImage();
+
   void Draw(sf::RenderWindow& window) const;
 };
 

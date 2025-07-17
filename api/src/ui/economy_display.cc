@@ -16,19 +16,19 @@ void EconomyDisplay::SetupUiEconomyText() {
   const auto text_pos = sf::Vector2f(0.0f, 0.0f);
 
   // Wood text setup
-  wood_economy_text_.setFont(font);
+  wood_economy_text_.setFont(font_);
   wood_economy_text_.setCharacterSize(16);
   wood_economy_text_.setFillColor(sf::Color::Black);
   wood_economy_text_.setPosition(sf::Vector2f(
       text_pos.x + wood_shape_.getGlobalBounds().size.x, text_pos.y));
 
   // Stone text setup
-  stone_economy_text_.setFont(font);
+  stone_economy_text_.setFont(font_);
   stone_economy_text_.setCharacterSize(16);
   stone_economy_text_.setFillColor(sf::Color::Black);
   stone_economy_text_.setPosition(
       sf::Vector2f(text_pos.x + stone_shape_.getGlobalBounds().size.x,
-                   text_pos.y + stone_shape_.getGlobalBounds().size.y));;
+                   text_pos.y + stone_shape_.getGlobalBounds().size.y));
 
   // Set text as economy
   wood_economy_amount_ = economy_manager_.GetWoodEconomy();
@@ -46,7 +46,7 @@ void EconomyDisplay::SetupUiEconomyImage() {
   // Wood image setup
   wood_shape_.setPosition(wood_shape_position);
   wood_shape_.setColor(color);
-  wood_shape_.setTexture(textures_.GetAsset(EconomySprite::kWood));;
+  wood_shape_.setTexture(textures_.GetAsset(EconomySprite::kWood));
 
   // Stone image setup
   const auto stone_shape_position = sf::Vector2f(

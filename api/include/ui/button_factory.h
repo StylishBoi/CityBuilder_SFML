@@ -23,7 +23,7 @@ public:
   ButtonFactory(){
     textures_.LoadAssets(files_);
     if (!font.openFromFile("_assets/fonts/Bebas-Regular.TTF")) {
-      std::cout << "Failed to load font" << std::endl;
+      std::cout << "Failed to load font_" << std::endl;
     }
   }
 

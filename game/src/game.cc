@@ -1,13 +1,13 @@
 #include "game.h"
 
-#include "gameplay/resources_manager.h"
 #include "ai/npc_manager.h"
+#include "gameplay/resources_manager.h"
 #include "graphics/building_manager.h"
 #include "graphics/tilemap.h"
-
 #include "ui/button.h"
 #include "ui/button_factory.h"
 #include "ui/clickable.h"
+#include "ui/economy_display.h"
 
 #ifdef TRACY_ENABLE
 #include <tracy/Tracy.hpp>
@@ -24,9 +24,12 @@ namespace {
 
   ResourceManager resource_manager_;
   BuildingManager building_manager_;
+  EconomyManager economy_manager_;
 
   // UI Elements
   api::ui::ButtonFactory btn_factory_;
+
+  //std::unique_ptr<api::ui::EconomyDisplay> economy_display_;
 
   std::unique_ptr<api::ui::Button> btn_blue_;
   std::unique_ptr<api::ui::Button> btn_red_;
@@ -41,12 +44,14 @@ namespace {
   void ChopEvent(int index, float quantity) {
     std::cout << "Chop event : " << index << " : " << quantity << "\n";
     if (quantity <= 0){
+      economy_manager_.IncreaseWoodEconomyBy(10);
       tilemap_ptr_->SetTile(index, TileMap::Tile::kFlowers);
     }
   }
   void MineEvent(int index, float quantity) {
     std::cout << "Mine event : " << index << " : " << quantity << "\n";
     if (quantity <= 0){
+      economy_manager_.IncreaseStoneEconomyBy(10);
       tilemap_ptr_->SetTile(index, TileMap::Tile::kFlowers);
     }
   }
@@ -54,6 +59,7 @@ namespace {
   void HarvestEvent(int index, float quantity) {
     std::cout << "Harvest event : " << index << " : " << quantity << "\n";
     if (quantity <= 0){
+      economy_manager_.IncreaseFoodEconomyBy(10);
       tilemap_ptr_->SetTile(index, TileMap::Tile::kFlowers);
     }
   }
@@ -64,6 +70,10 @@ namespace {
     tilemap_ptr_->Setup();
     building_manager_.Setup(tilemap_ptr_.get());
     //economy_display_->Setup();
+
+    // Initialize and setup economy display
+    //economy_display_->Setup();
+
 
     resource_manager_.LoadResources(
         Resource::ResourceType::kWood,
@@ -84,12 +94,17 @@ namespace {
       if (std::find(walkables.begin(), walkables.end(), clickPos) != walkables.end()) {
         //Verify if there is a building at the position
         if (!building_manager_.HasBuildingAt(clickPos)){
-          npc_manager_.Add(
-              npc_adding_type, tilemap_ptr_.get(),
-              TileMap::TilePos(sf::Mouse::getPosition(window_)),
-              resource_manager_);
-          building_manager_.Add(TileMap::TilePos(sf::Mouse::getPosition(window_)), npc_adding_type);
-        }
+            if(building_manager_.BuildingStonePrice(npc_adding_type)<=economy_manager_.GetStoneEconomy() &&
+              building_manager_.BuildingWoodPrice(npc_adding_type)<=economy_manager_.GetWoodEconomy()){
+              npc_manager_.Add(
+                  npc_adding_type, tilemap_ptr_.get(),
+                  TileMap::TilePos(sf::Mouse::getPosition(window_)),
+                  resource_manager_);
+              building_manager_.Add(TileMap::TilePos(sf::Mouse::getPosition(window_)), npc_adding_type);
+              economy_manager_.ReduceWoodEconomyBy(building_manager_.BuildingWoodPrice(npc_adding_type));
+              economy_manager_.ReduceStoneEconomyBy(building_manager_.BuildingStonePrice(npc_adding_type));
+            }
+          }
         }
       npc_adding_type = api::ai::NpcType::kNone;
     };
@@ -108,7 +123,7 @@ namespace {
   }
 }
 
-	void Loop() {
+void Loop() {
   Setup();
 
 
@@ -151,6 +166,8 @@ namespace {
     building_manager_.Draw(window_);
     npc_manager_.Draw(window_);
 
+    //economy_display_->Draw(window_);
+
     btn_blue_->Draw(window_);
     btn_red_->Draw(window_);
     btn_green_->Draw(window_);
@@ -163,7 +180,4 @@ namespace {
 #endif
   }
 }
-//1 - Make button to place house
-//2 - House automatically spawns one NPC
-
 }

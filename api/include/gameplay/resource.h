@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <iostream>
+#include "economy_manager.h"
 
 class Resource {
 
@@ -23,6 +24,7 @@ private:
   bool is_respawning_;
   ResourceType type_ = ResourceType::kNone;
   double cut_time_ = 0;
+  EconomyManager *economyManager_ = nullptr;
 
 public:
   [[nodiscard]] ResourceType GetType() const;

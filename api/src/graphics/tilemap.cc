@@ -105,17 +105,13 @@ sf::Vector2f TileMap::ScreenPosition(const int index) {
   return{x,y};
 }
 
-int TileMap::Index(const sf::Vector2f screenPosition) {
-  return static_cast<int>(ceil(screenPosition.y/kTileSize)*kWindowWidth) +
-         static_cast<int>(ceil(screenPosition.x/kTileSize));
-}
-
 sf::Vector2f TileMap::TilePos(sf::Vector2i pos) {
 
   return {static_cast<float>(ceil(pos.x / kTileSize) * kTileSize),
           static_cast<float>(ceil(pos.y / kTileSize) * kTileSize)};
 
 }
+
 
 void TileMap::SetTile(int idx, Tile tile) {
   if (idx > 0 && idx < tiles_.size()) {

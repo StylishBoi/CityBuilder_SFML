@@ -34,8 +34,8 @@ private:
   std::vector<sf::Vector2f> walkables_;
 
 protected:
+ static int Index(sf::Vector2f screenPosition);
  AssetManager<sf::Texture, Tile, "_assets/sprites"> textures;
-  static int Index(sf::Vector2f screenPosition);
 
 public:
   explicit TileMap();

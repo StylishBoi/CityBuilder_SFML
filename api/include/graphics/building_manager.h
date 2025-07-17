@@ -32,5 +32,9 @@ public:
   void Draw(sf::RenderWindow &window);
   bool HasBuildingAt(const sf::Vector2f& position) const;
 
+  //Building prices
+  static int BuildingWoodPrice(api::ai::NpcType npcType);
+  static int BuildingStonePrice(api::ai::NpcType npcType);
+
 };
 #endif //BUILDING_MANAGER_H

@@ -47,3 +47,28 @@ bool BuildingManager::HasBuildingAt(const sf::Vector2f &position) const {
   }
   return false;
 }
+
+int BuildingManager::BuildingWoodPrice(api::ai::NpcType npcType) {
+  switch (npcType) {
+    case api::ai::NpcType::kBlueLumberjack:
+      return 20;
+    case api::ai::NpcType::kRedMiner:
+      return 10;
+    case api::ai::NpcType::kGreenGatherer:
+      return 20;
+    default:
+      return 0;
+  }
+}
+int BuildingManager::BuildingStonePrice(api::ai::NpcType npcType) {
+  switch (npcType) {
+    case api::ai::NpcType::kBlueLumberjack:
+      return 10;
+    case api::ai::NpcType::kRedMiner:
+      return 20;
+    case api::ai::NpcType::kGreenGatherer:
+      return 20;
+    default:
+      return 0;
+  }
+}
