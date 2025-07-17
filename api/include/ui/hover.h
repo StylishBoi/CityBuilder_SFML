@@ -8,11 +8,11 @@
 
 #include "clickable.h"
 
-/*namespace api::ui {
-
 class Hover{
-  sf::Sprite hover_sprite_;
+
+ private:
   sf::Texture texture_;
+  sf::Vector2f hover_position_;
 
  public:
   Hover();
@@ -20,6 +20,5 @@ class Hover{
   void Draw(sf::RenderWindow& window) const;
 };
 
-}*/
 
 #endif  // CITYBUILDER_HOVER_H

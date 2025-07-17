@@ -8,6 +8,7 @@
 #include "ui/button_factory.h"
 #include "ui/clickable.h"
 #include "ui/economy_display.h"
+#include "ui/hover.h"
 
 #ifdef TRACY_ENABLE
 #include <tracy/Tracy.hpp>
@@ -30,6 +31,8 @@ namespace {
   api::ui::ButtonFactory btn_factory_;
 
   //std::unique_ptr<api::ui::EconomyDisplay> economy_display_;
+
+  Hover hover_;
 
   std::unique_ptr<api::ui::Button> btn_blue_;
   std::unique_ptr<api::ui::Button> btn_red_;
@@ -69,10 +72,7 @@ namespace {
 
     tilemap_ptr_->Setup();
     building_manager_.Setup(tilemap_ptr_.get());
-    //economy_display_->Setup();
 
-    // Initialize and setup economy display
-    //economy_display_->Setup();
 
 
     resource_manager_.LoadResources(
@@ -152,12 +152,11 @@ void Loop() {
       btn_green_->HandleEvent(event, buttons_was_clicked_);
       btn_exit_->HandleEvent(event, buttons_was_clicked_);
 
-
       tilemap_ptr_->HandleEvent(event, buttons_was_clicked_);
-      //building_manager_.HandleEvent(event, buttons_was_clicked_);
     }
 
     npc_manager_.Update(deltaTime);
+    hover_.Update(TileMap::TilePos(sf::Mouse::getPosition(window_)));
 
     window_.clear();
 
@@ -167,6 +166,10 @@ void Loop() {
     npc_manager_.Draw(window_);
 
     //economy_display_->Draw(window_);
+
+    if(npc_adding_type!=api::ai::NpcType::kNone){
+      hover_.Draw(window_);
+    }
 
     btn_blue_->Draw(window_);
     btn_red_->Draw(window_);
