@@ -1,7 +1,57 @@
 #include "ui/economy_display.h"
-#include "gameplay/economy_manager.h"
-#include "assets/asset_manager.h"
 
-// draw
-void EconomyDisplay::Draw(sf::RenderWindow& window) const {
+void EconomyDisplay::Setup() {
+  textures.LoadAssets(files);
+
+  if(economy_font.openFromFile("_assets/fonts/Bebas-Regular.ttf")){
+  }
+}
+
+void EconomyDisplay::Update(int wood, int stone, int food) {
+  wood_total_ = wood;
+  stone_total_ = stone;
+  food_total_ = food;
+}
+
+void EconomyDisplay::Draw(sf::RenderWindow& window) {
+  sf::Sprite wood_icon(textures.GetAsset(economyIcon::kWood));
+  wood_icon.setPosition(sf::Vector2f (25, 25));
+  window.draw(wood_icon);
+
+  // Draw stone icon and count
+  sf::Sprite stone_icon(textures.GetAsset(economyIcon::kStone));
+  stone_icon.setPosition(sf::Vector2f (25, 75));
+  window.draw(stone_icon);
+
+  // Draw food icon and count
+  sf::Sprite food_icon(textures.GetAsset(economyIcon::kFood));
+  food_icon.setPosition(sf::Vector2f (25, 125));
+  window.draw(food_icon);
+
+  sf::Text wood_text(economy_font, std::to_string(wood_total_)+" W", kTextSize);
+  wood_text.setPosition(sf::Vector2f(50, 25));
+  window.draw(wood_text);
+
+  sf::Text stone_text(economy_font, std::to_string(stone_total_)+" S", kTextSize);
+  stone_text.setPosition(sf::Vector2f(50, 75));
+  window.draw(stone_text);
+
+  sf::Text food_text(economy_font, std::to_string(food_total_)+" F", kTextSize);
+  food_text.setPosition(sf::Vector2f(50, 125));
+  window.draw(food_text);
+
+  sf::Text price(economy_font, "20W | 10S", kTextSize);
+  price.setFillColor(sf::Color::Black);
+
+  price.setPosition(sf::Vector2f(70, 615));
+  window.draw(price);
+
+  price.setString("10W | 20S");
+  price.setPosition(sf::Vector2f(170, 615));
+  window.draw(price);
+
+    price.setString("20W | 20S");
+  price.setPosition(sf::Vector2f(270, 615));
+  window.draw(price);
+
 }

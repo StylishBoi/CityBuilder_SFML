@@ -26,6 +26,7 @@ namespace {
   ResourceManager resource_manager_;
   BuildingManager building_manager_;
   EconomyManager economy_manager_;
+  EconomyDisplay economy_display_;
 
   // UI Elements
   api::ui::ButtonFactory btn_factory_;
@@ -85,7 +86,7 @@ namespace {
 
     tilemap_ptr_->Setup();
     building_manager_.Setup(tilemap_ptr_.get());
-
+    economy_display_.Setup();
 
 
     resource_manager_.LoadResources(
@@ -170,6 +171,9 @@ void Loop() {
 
     npc_manager_.Update(deltaTime);
     resource_manager_.UpdateResources(deltaTime);
+    economy_display_.Update(economy_manager_.GetWoodEconomy(),
+                            economy_manager_.GetStoneEconomy(),
+                            economy_manager_.GetFoodEconomy());;
     hover_.Update(TileMap::TilePos(sf::Mouse::getPosition(window_)));
 
     window_.clear();
@@ -189,6 +193,8 @@ void Loop() {
     btn_red_->Draw(window_);
     btn_green_->Draw(window_);
     btn_exit_->Draw(window_);
+
+    economy_display_.Draw(window_);
 
     window_.display();
 

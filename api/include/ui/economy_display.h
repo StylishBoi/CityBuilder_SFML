@@ -14,10 +14,30 @@ class EconomyDisplay {
  private:
   static constexpr float kTextSize = 16.0f;
 
-  sf::Sprite wood_icon_;
-  sf::Text wood_text_;
+  enum class economyIcon {
+    kNone,
+    kWood,
+    kStone,
+    kFood,
+    kLength
+  };
+
+  std::string_view files[static_cast<size_t>(economyIcon::kLength)]{
+      "empty.png",
+      "wood.png",
+      "miner_house.png",
+      "gatherer_house.png"};
+  core::experimental::AssetManager<sf::Texture, economyIcon, "_assets/sprites"> textures;
+
+  sf::Font economy_font;
+
+  int wood_total_;
+  int stone_total_;
+  int food_total_;
 
  public:
-  void Draw(sf::RenderWindow& window) const;
+  void Setup();
+  void Draw(sf::RenderWindow& window);
+  void Update(int wood, int stone, int food);
 };
 #endif  // ECONOMY_DISPLAY_H
