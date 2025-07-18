@@ -16,7 +16,7 @@ namespace api::ai {
     std::vector<Npc> npcs_;
 
   public:
-    void Add(NpcType type, TileMap* tilemap, sf::Vector2f start_position, ResourceManager& resources_manager);
+    void Add(NpcType type, TileMap* tilemap, sf::Vector2f start_position, ResourceManager& resources_manager, EconomyManager* economyManager);
     void Update(float dt);
     void Draw(sf::RenderWindow& window);
 

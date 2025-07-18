@@ -40,6 +40,7 @@ class NpcBehaviourTree {
 
   sf::Vector2f home_position_;
   std::vector<Resource*> resources_;
+  EconomyManager* economy_manager_;
   Resource* current_resource_ = nullptr;
 
  public:
@@ -49,7 +50,8 @@ class NpcBehaviourTree {
       motion::Path* path,
       TileMap* tilemap,
       sf::Vector2f home_position,
-      std::vector<Resource*> resources);
+      std::vector<Resource*> resources,
+      EconomyManager* economyManager);
   void Update(float delta_time);
 
 };

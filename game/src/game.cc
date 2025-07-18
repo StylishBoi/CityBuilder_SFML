@@ -113,7 +113,7 @@ namespace {
               npc_manager_.Add(
                   npc_adding_type, tilemap_ptr_.get(),
                   TileMap::TilePos(sf::Mouse::getPosition(window_)),
-                  resource_manager_);
+                  resource_manager_, &economy_manager_);
               building_manager_.Add(TileMap::TilePos(sf::Mouse::getPosition(window_)), npc_adding_type);
               economy_manager_.ReduceWoodEconomyBy(building_manager_.BuildingWoodPrice(npc_adding_type));
               economy_manager_.ReduceStoneEconomyBy(building_manager_.BuildingStonePrice(npc_adding_type));

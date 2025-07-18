@@ -10,7 +10,8 @@ using namespace api::motion;
 namespace api::ai{
 
 void Npc::Setup(std::string_view name, std::string_view filename,
-                TileMap* tilemap, sf::Vector2f& spawn_position, std::vector<Resource*> resources) {
+                TileMap* tilemap, sf::Vector2f& spawn_position, std::vector<Resource*> resources,
+                EconomyManager* economyManager) {
 
   name_ = std::string(name);
 
@@ -25,7 +26,7 @@ void Npc::Setup(std::string_view name, std::string_view filename,
   std::cout << "Setup " << name_ << " -- -- -- -- -- -- -- -- -- -- -- -- -- " << std::endl;
 
   bt_tree_->SetupBehaviourTree(motor_.get(), path_.get(), tilemap,
-                               spawn_position, resources);
+                               spawn_position, resources, economyManager);
 
   home_position_= spawn_position;
   motor_->SetPosition(home_position_);

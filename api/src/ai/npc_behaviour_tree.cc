@@ -50,7 +50,10 @@ Status NpcBehaviourTree::CheckHunger() const {
       std::cout << "No motor\n";
       return Status::kFailure;
     }
-
+    if(economy_manager_->GetFoodEconomy() < 10){
+      return Status::kFailure;
+    }
+    economy_manager_->ReduceFoodEconomyBy(10);
     return Status::kSuccess;
 
   } else {
@@ -153,7 +156,8 @@ Status NpcBehaviourTree::Idle() {
 
 void NpcBehaviourTree::SetupBehaviourTree(Motor* npc_motor, Path* path,
                                           TileMap* tilemap, sf::Vector2f home_position,
-                                          std::vector<Resource*> resources) {
+                                          std::vector<Resource*> resources,
+                                          EconomyManager* economyManager) {
   if (resources.empty()) {
     std::cout << "Received null gameplay pointer\n";
   } else {
@@ -168,6 +172,7 @@ void NpcBehaviourTree::SetupBehaviourTree(Motor* npc_motor, Path* path,
   tilemap_ = tilemap;
   home_position_ = home_position;
   resources_ = resources;
+  economy_manager_ = economyManager;
 
   auto feedSequence = std::make_unique<Sequence>();
   feedSequence->AddChild(std::make_unique<Action>([this]() { return CheckHunger(); }));
