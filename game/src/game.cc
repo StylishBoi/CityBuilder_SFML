@@ -66,6 +66,19 @@ namespace {
       tilemap_ptr_->SetTile(index, TileMap::Tile::kFlowers);
     }
   }
+  void RespawnEvent(int index, Resource::ResourceType resource_type) {
+    switch(resource_type){
+      case Resource::ResourceType::kWood:
+        tilemap_ptr_->SetTile(index, TileMap::Tile::kWood);
+        break;
+      case Resource::ResourceType::kFood:
+        tilemap_ptr_->SetTile(index, TileMap::Tile::kFood);
+        break;
+      case Resource::ResourceType::kRock:
+        tilemap_ptr_->SetTile(index, TileMap::Tile::kRock);
+        break;
+    }
+  }
 
   void Setup() {
     window_.create(sf::VideoMode({kWindowWidth,kWindowHeight}), "SFML window");
@@ -77,15 +90,15 @@ namespace {
 
     resource_manager_.LoadResources(
         Resource::ResourceType::kWood,
-        tilemap_ptr_->GetCollectibles(TileMap::Tile::kWood), ChopEvent);
+        tilemap_ptr_->GetCollectibles(TileMap::Tile::kWood), ChopEvent, RespawnEvent);
 
     resource_manager_.LoadResources(
         Resource::ResourceType::kFood,
-        tilemap_ptr_->GetCollectibles(TileMap::Tile::kFood), HarvestEvent);
+        tilemap_ptr_->GetCollectibles(TileMap::Tile::kFood), HarvestEvent, RespawnEvent);
 
     resource_manager_.LoadResources(
         Resource::ResourceType::kRock,
-        tilemap_ptr_->GetCollectibles(TileMap::Tile::kRock), MineEvent);
+        tilemap_ptr_->GetCollectibles(TileMap::Tile::kRock), MineEvent, RespawnEvent);
 
     tilemap_ptr_->OnReleasedLeft = []() {
       sf::Vector2f clickPos = TileMap::TilePos(sf::Mouse::getPosition(window_));
@@ -156,6 +169,7 @@ void Loop() {
     }
 
     npc_manager_.Update(deltaTime);
+    resource_manager_.UpdateResources(deltaTime);
     hover_.Update(TileMap::TilePos(sf::Mouse::getPosition(window_)));
 
     window_.clear();

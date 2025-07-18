@@ -22,8 +22,8 @@ private:
   //Define the resource status
   bool is_being_worked_on_;
   bool is_respawning_;
+  float respawn_timer;
   ResourceType type_ = ResourceType::kNone;
-  double cut_time_ = 0;
   EconomyManager *economyManager_ = nullptr;
 
 public:
@@ -40,8 +40,10 @@ public:
   void SetDespawnStatus(bool spawn);
 
   void Exploit(float);
+  void Update(float);
 
   std::function<void(int, float)> on_chop_resource_ = nullptr;
+  std::function<void(int, Resource::ResourceType)> on_respawn_resource_ = nullptr;
 
 };
 
@@ -72,7 +74,23 @@ inline void Resource::Exploit(float rate) {
 
   if (on_chop_resource_) {
     on_chop_resource_(tile_index_, quantity_);
-    is_respawning_ =true;
+  }
+  if(quantity_<=0){
+    respawn_timer=true;
+  }
+}
+
+inline void Resource::Update(float dt){
+  if(is_respawning_){
+    respawn_timer+=dt;
+    std::cout<<"The resource timer is currently at : "<<respawn_timer<<"\n";
+    if(respawn_timer>30){
+      is_respawning_=false;
+      is_being_worked_on_=false;
+      respawn_timer=0;
+      on_respawn_resource_(tile_index_, type_);
+      quantity_=0;
+    }
   }
 }
 

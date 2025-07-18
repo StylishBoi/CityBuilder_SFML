@@ -5,7 +5,8 @@
 
 void ResourceManager::LoadResources(Resource::ResourceType type,
                                     std::vector<int> indexes,
-                                    std::function<void(int, float)> on_chop_event)
+                                    std::function<void(int, float)> on_chop_event,
+                                    std::function<void(int, Resource::ResourceType)> on_respawn_resource_)
 {
   std::cout << "Loading gameplay of type " << static_cast<int>(type)
             << " with " << indexes.size() << " indexes\n";
@@ -17,6 +18,7 @@ void ResourceManager::LoadResources(Resource::ResourceType type,
     resources_.back()->SetQuantity(10);
     resources_.back()->SetWorkStatus(false);
     resources_.back()->on_chop_resource_ = on_chop_event;
+    resources_.back()->on_respawn_resource_ = on_respawn_resource_;
 
     std::cout << "This resource has been added : " << resources_.size() << "\n";
   }
@@ -57,4 +59,9 @@ bool ResourceManager::HasResourceAt(int tileIndex) const {
     }
   }
   return false;
+}
+void ResourceManager::UpdateResources(float dt) {
+  for (auto& resource : resources_) {
+    resource->Update(dt);
+  }
 }

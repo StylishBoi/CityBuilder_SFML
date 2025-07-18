@@ -13,9 +13,11 @@ class ResourceManager : public TileMap {
 public:
   void LoadResources(Resource::ResourceType type,
                     std::vector<int> indexes,
-                    std::function<void(int, float)> on_chop_event);
+                    std::function<void(int, float)> on_chop_event,
+                    std::function<void(int, Resource::ResourceType)> on_respawn_resource_);
   [[nodiscard]] std::vector<Resource*> GetResources(Resource::ResourceType type) const;
   void Draw(sf::RenderWindow& window);
+  void UpdateResources(float dt);
   bool HasResourceAt(int tileIndex) const;
 };
 
