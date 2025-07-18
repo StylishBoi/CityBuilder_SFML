@@ -19,14 +19,16 @@ class EconomyDisplay {
     kWood,
     kStone,
     kFood,
+    kBackground,
     kLength
   };
 
   std::string_view files[static_cast<size_t>(economyIcon::kLength)]{
       "empty.png",
-      "wood.png",
-      "miner_house.png",
-      "gatherer_house.png"};
+      "wood_icon.png",
+      "rock_icon.png",
+      "food_icon.png",
+      "HighQualitySquareBox.png"};
   core::experimental::AssetManager<sf::Texture, economyIcon, "_assets/sprites"> textures;
 
   sf::Font economy_font;
