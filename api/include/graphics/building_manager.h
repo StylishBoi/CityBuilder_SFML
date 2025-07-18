@@ -31,6 +31,7 @@ public:
   void Add(sf::Vector2f position, api::ai::NpcType npcType);
   void Draw(sf::RenderWindow &window);
   bool HasBuildingAt(const sf::Vector2f& position) const;
+  void RemoveBuildingAt(const sf::Vector2f& position);
 
   //Building prices
   static int BuildingWoodPrice(api::ai::NpcType npcType);

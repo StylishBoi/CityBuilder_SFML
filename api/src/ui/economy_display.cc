@@ -19,47 +19,45 @@ void EconomyDisplay::Draw(sf::RenderWindow& window) {
   economy_background.setScale(sf::Vector2f(0.175, 0.19));
   window.draw(economy_background);
 
-  sf::Sprite wood_icon(textures.GetAsset(economyIcon::kWood));
-  wood_icon.setPosition(sf::Vector2f (25, 25));
-  window.draw(wood_icon);
+  sf::Sprite economy_icon(textures.GetAsset(economyIcon::kWood));
+  economy_icon.setPosition(sf::Vector2f (25, 25));
+  window.draw(economy_icon);
 
   // Draw stone icon and count
-  sf::Sprite stone_icon(textures.GetAsset(economyIcon::kStone));
-  stone_icon.setPosition(sf::Vector2f (25, 50));
-  window.draw(stone_icon);
+  economy_icon.setTexture(textures.GetAsset(economyIcon::kStone));
+  economy_icon.setPosition(sf::Vector2f (25, 50));
+  window.draw(economy_icon);
 
   // Draw food icon and count
-  sf::Sprite food_icon(textures.GetAsset(economyIcon::kFood));
-  food_icon.setPosition(sf::Vector2f (25, 75));
-  window.draw(food_icon);
+  economy_icon.setTexture(textures.GetAsset(economyIcon::kFood));
+  economy_icon.setPosition(sf::Vector2f (25, 75));
+  window.draw(economy_icon);
 
-  sf::Text wood_text(economy_font, std::to_string(wood_total_)+" W", kTextSize);
-  wood_text.setFillColor(sf::Color::Black);
-  wood_text.setPosition(sf::Vector2f(50, 25));
-  window.draw(wood_text);
+  sf::Text economy_text(economy_font, std::to_string(wood_total_)+" W", kTextSize);
+  economy_text.setFillColor(sf::Color::Black);
+  economy_text.setPosition(sf::Vector2f(50, 25));
+  window.draw(economy_text);
 
-  sf::Text stone_text(economy_font, std::to_string(stone_total_)+" S", kTextSize);
-  stone_text.setFillColor(sf::Color::Black);
-  stone_text.setPosition(sf::Vector2f(50, 50));
-  window.draw(stone_text);
+  economy_text.setString(std::to_string(stone_total_)+" S");
+  economy_text.setPosition(sf::Vector2f(50, 50));
+  window.draw(economy_text);
 
-  sf::Text food_text(economy_font, std::to_string(food_total_)+" F", kTextSize);
-  food_text.setFillColor(sf::Color::Black);
-  food_text.setPosition(sf::Vector2f(50, 75));
-  window.draw(food_text);
+  economy_text.setString(std::to_string(food_total_)+" F");
+  economy_text.setPosition(sf::Vector2f(50, 75));
+  window.draw(economy_text);
 
-  sf::Text price(economy_font, "20W | 10S", kTextSize);
-  price.setFillColor(sf::Color::Black);
+  sf::Text price_text(economy_font, "20W | 10S", kTextSize);
+  price_text.setFillColor(sf::Color::Black);
 
-  price.setPosition(sf::Vector2f(70, 615));
-  window.draw(price);
+  price_text.setPosition(sf::Vector2f(70, 615));
+  window.draw(price_text);
 
-  price.setString("10W | 20S");
-  price.setPosition(sf::Vector2f(170, 615));
-  window.draw(price);
+  price_text.setString("10W | 20S");
+  price_text.setPosition(sf::Vector2f(170, 615));
+  window.draw(price_text);
 
-    price.setString("20W | 20S");
-  price.setPosition(sf::Vector2f(270, 615));
-  window.draw(price);
+  price_text.setString("20W | 20S");
+  price_text.setPosition(sf::Vector2f(270, 615));
+  window.draw(price_text);
 
 }

@@ -83,13 +83,12 @@ inline void Resource::Exploit(float rate) {
 inline void Resource::Update(float dt){
   if(is_respawning_){
     respawn_timer+=dt;
-    std::cout<<"The resource timer is currently at : "<<respawn_timer<<"\n";
     if(respawn_timer>30){
       is_respawning_=false;
       is_being_worked_on_=false;
       respawn_timer=0;
       on_respawn_resource_(tile_index_, type_);
-      quantity_=0;
+      quantity_=10;
     }
   }
 }

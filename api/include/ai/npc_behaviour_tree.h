@@ -22,7 +22,7 @@ class NpcBehaviourTree {
 
   void SetDestination(const sf::Vector2f& destination) const;
   // Actions
-  [[nodiscard]] core::ai::behaviour_tree::Status CheckHunger() const;
+  [[nodiscard]] core::ai::behaviour_tree::Status CheckHunger();
   [[nodiscard]] core::ai::behaviour_tree::Status Move() const;
   [[nodiscard]] core::ai::behaviour_tree::Status Eat();
   [[nodiscard]] core::ai::behaviour_tree::Status PickResource();
@@ -37,6 +37,7 @@ class NpcBehaviourTree {
   float hunger_ = 0.0f;
   bool resource_available_ = true;
   float tick_dt_ =0;
+  float starvation_rate_=0;
 
   sf::Vector2f home_position_;
   std::vector<Resource*> resources_;

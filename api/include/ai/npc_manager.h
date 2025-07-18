@@ -19,6 +19,7 @@ namespace api::ai {
     void Add(NpcType type, TileMap* tilemap, sf::Vector2f start_position, ResourceManager& resources_manager, EconomyManager* economyManager);
     void Update(float dt);
     void Draw(sf::RenderWindow& window);
+    void RemoveNPC(Npc removedNpc);
 
   };
 }

@@ -72,3 +72,12 @@ int BuildingManager::BuildingStonePrice(api::ai::NpcType npcType) {
       return 0;
   }
 }
+void BuildingManager::RemoveBuildingAt(const sf::Vector2f &position) {
+  int index=0;
+  for (auto [building, building_position] : buildingPositions_) {
+    if(position.x == building_position.x && position.y == building_position.y){
+      buildingPositions_.erase(buildingPositions_.begin()+index);
+    }
+    index++;
+  }
+}

@@ -30,12 +30,16 @@ void NpcBehaviourTree::SetDestination(const sf::Vector2f& destination) const {
   }
 }
 
-Status NpcBehaviourTree::CheckHunger() const {
+Status NpcBehaviourTree::CheckHunger() {
   //std::cout << "Current action : Checking hunger"<<"\n";
   //std::cout << "Am I hungry ? " << std::to_string(hunger_);
 
   if (hunger_ >= 100) {
     std::cout << " : Yes, I need to find food\n";
+    starvation_rate_+=tick_dt_;
+    if(starvation_rate_>30){
+
+    }
 
     SetDestination(home_position_);
     if (!tilemap_) {

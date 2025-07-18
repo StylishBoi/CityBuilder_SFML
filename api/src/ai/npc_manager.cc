@@ -26,5 +26,9 @@ void NpcManager::Draw(sf::RenderWindow& window) {
     npc.Draw(window);
   }
 }
+void NpcManager::RemoveNPC(Npc removedNpc) {
+  for (auto& npc : npcs_) {
+  }
+}
 
 }
