@@ -31,13 +31,13 @@ void NpcBehaviourTree::SetDestination(const sf::Vector2f& destination) const {
 }
 
 Status NpcBehaviourTree::CheckHunger() {
-  std::cout << "Current action : Checking hunger"<<"\n";
-  std::cout << "Am I hungry ? " << std::to_string(hunger_);
+  //std::cout << "Current action : Checking hunger"<<"\n";
+  //std::cout << "Am I hungry ? " << std::to_string(hunger_);
 
   if (hunger_ >= 100) {
     //std::cout << " : Yes, I need to find food\n";
     starvation_rate_+=tick_dt_;
-    std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
+    //std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
     if (starvation_rate_ > 30 && death_event) {
       death_event(home_position_);
       return Status::kFailure; // Return immediately after triggering death
@@ -64,7 +64,7 @@ Status NpcBehaviourTree::CheckHunger() {
     return Status::kSuccess;
 
   } else {
-    std::cout << " : No, I can wait\n";
+    //std::cout << " : No, I can wait\n";
     return Status::kFailure;
   }
 }
@@ -154,7 +154,7 @@ Status NpcBehaviourTree::GetResource() {
   hunger_ += kHungerRate * tick_dt_;
   if(hunger_>100){
     starvation_rate_+=tick_dt_;
-    std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
+    //std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
   }
   return Status::kRunning;
 }
@@ -163,7 +163,7 @@ Status NpcBehaviourTree::Idle() {
   hunger_ += kHungerRate * tick_dt_;
   if(hunger_>100){
     starvation_rate_+=tick_dt_;
-    std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
+    //std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
   }
   return Status::kSuccess;
 }
