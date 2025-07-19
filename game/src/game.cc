@@ -110,8 +110,9 @@ namespace {
       if (std::find(walkables.begin(), walkables.end(), clickPos) != walkables.end()) {
         //Verify if there is a building at the position
         if (!building_manager_.HasBuildingAt(clickPos)){
+          if(!resource_manager_.HasResourceAt(TileMap::WorldToTileIndex(clickPos))){
             if(building_manager_.BuildingStonePrice(npc_adding_type)<=economy_manager_.GetStoneEconomy() &&
-              building_manager_.BuildingWoodPrice(npc_adding_type)<=economy_manager_.GetWoodEconomy()){
+                building_manager_.BuildingWoodPrice(npc_adding_type)<=economy_manager_.GetWoodEconomy()){
               npc_manager_.Add(
                   npc_adding_type, tilemap_ptr_.get(),
                   TileMap::TilePos(sf::Mouse::getPosition(window_)),
@@ -120,6 +121,7 @@ namespace {
               economy_manager_.ReduceWoodEconomyBy(building_manager_.BuildingWoodPrice(npc_adding_type));
               economy_manager_.ReduceStoneEconomyBy(building_manager_.BuildingStonePrice(npc_adding_type));
             }
+           }
           }
         }
       npc_adding_type = api::ai::NpcType::kNone;

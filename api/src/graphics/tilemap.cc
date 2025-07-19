@@ -132,3 +132,8 @@ std::vector<int> TileMap::GetCollectibles(Tile search_tile){
   return collectibles;
 
 }
+
+int TileMap::WorldToTileIndex(const sf::Vector2f& position) {
+  return static_cast<int>(position.y / kTileSize)  * (kWindowWidth / kTileSize) +
+         static_cast<int>(position.x / kTileSize);
+}

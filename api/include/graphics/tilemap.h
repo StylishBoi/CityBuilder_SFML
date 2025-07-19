@@ -48,5 +48,6 @@ public:
 
   std::vector<sf::Vector2f> GetWalkables() { return walkables_; };
   std::vector<int> GetCollectibles(Tile);
+  static int WorldToTileIndex(const sf::Vector2f& position);
 };
 #endif
