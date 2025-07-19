@@ -52,8 +52,8 @@ bool ResourceManager::HasResourceAt(int tileIndex) const {
 
   for (auto& resource : resources_) {
 
-    std::cout << "Checking resource at " << resource->GetTileIndex() << "\n";
-    std::cout << "Trying to place on " << tileIndex << "\n";
+    //std::cout << "Checking resource at " << resource->GetTileIndex() << "\n";
+    //std::cout << "Trying to place on " << tileIndex << "\n";
     if (resource->GetTileIndex() == tileIndex) {
       return true;
     }
