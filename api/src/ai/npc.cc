@@ -43,7 +43,7 @@ void Npc::Update(const float dt){
   std::cout << " -- -- -- -- -- -- -- -- -- -- -- -- -- \n";*/
 
   if (!path_->IsValid()) {
-    std::cout << "NPC " << name_ << " has no valid path\n";
+    //std::cout << "NPC " << name_ << " has no valid path\n";
   }
 
   // -------------------

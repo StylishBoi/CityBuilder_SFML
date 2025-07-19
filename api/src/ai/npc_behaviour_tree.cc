@@ -38,9 +38,9 @@ Status NpcBehaviourTree::CheckHunger() {
     //std::cout << " : Yes, I need to find food\n";
     starvation_rate_+=tick_dt_;
     //std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
-    if (starvation_rate_ > 30 && death_event) {
+    if (starvation_rate_ > 10 && death_event) {
       death_event(home_position_);
-      return Status::kFailure; // Return immediately after triggering death
+      return Status::kFailure;
     }
 
 
@@ -154,7 +154,7 @@ Status NpcBehaviourTree::GetResource() {
   hunger_ += kHungerRate * tick_dt_;
   if(hunger_>100){
     starvation_rate_+=tick_dt_;
-    //std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
+    std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
   }
   return Status::kRunning;
 }
@@ -163,7 +163,7 @@ Status NpcBehaviourTree::Idle() {
   hunger_ += kHungerRate * tick_dt_;
   if(hunger_>100){
     starvation_rate_+=tick_dt_;
-    //std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
+    std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
   }
   return Status::kSuccess;
 }
@@ -188,7 +188,11 @@ void NpcBehaviourTree::SetupBehaviourTree(Motor* npc_motor, Path* path,
   home_position_ = home_position;
   resources_ = resources;
   economy_manager_ = economyManager;
-  death_event = deathEvent;
+  death_event = std::move(deathEvent);
+
+  if(death_event==nullptr){
+    std::cout<<"Death event is null\n";
+  }
 
   auto feedSequence = std::make_unique<Sequence>();
   feedSequence->AddChild(std::make_unique<Action>([this]() { return CheckHunger(); }));

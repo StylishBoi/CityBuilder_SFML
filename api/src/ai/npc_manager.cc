@@ -18,12 +18,17 @@ void NpcManager::Add(NpcType type,
 }
 
 void NpcManager::Update(float dt) {
-#ifdef TRACY_ENABLE
-  ZoneScoped;
-#endif
+  std::vector<Npc> npcs_copy;
+  npcs_copy.reserve(npcs_.size());
+
   for (auto& npc : npcs_) {
-    npc.Update(dt);
+    if (!npc.IsMarkedForDeath()) {
+      npc.Update(dt);
+      npcs_copy.push_back(std::move(npc));
+    }
   }
+  npcs_ = std::move(npcs_copy);
+
 }
 
 void NpcManager::Draw(sf::RenderWindow& window) {
@@ -32,11 +37,10 @@ void NpcManager::Draw(sf::RenderWindow& window) {
   }
 }
 void NpcManager::RemoveNPC(sf::Vector2f npc_position) {
-  auto removeIter = std::remove_if(npcs_.begin(), npcs_.end(),
-                                   [&npc_position](const Npc& npc) {
-                                     return npc.GetHomePosition() == npc_position;
-                                   });
-  npcs_.erase(removeIter, npcs_.end());
+  for (auto& npc : npcs_) {
+    if (npc.GetHomePosition() == npc_position) {
+      npc.MarkForDeath();
+    }
+  }
 }
-
 }

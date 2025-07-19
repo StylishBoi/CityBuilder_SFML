@@ -26,6 +26,10 @@ class Npc {
   // name
   std::string name_;
 
+ private:
+  bool marked_for_death_ = false;
+
+
  public:
   void Setup(std::string_view name, std::string_view filename,
              TileMap* tilemap, sf::Vector2f& spawn_position,
@@ -39,6 +43,9 @@ class Npc {
   sf::Vector2f GetHomePosition() const{
       return home_position_;
   }
+  void MarkForDeath() { marked_for_death_ = true; }
+  bool IsMarkedForDeath() const { return marked_for_death_; }
+
 
 };
 }
