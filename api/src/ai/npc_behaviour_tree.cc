@@ -38,7 +38,7 @@ Status NpcBehaviourTree::CheckHunger() {
     //std::cout << " : Yes, I need to find food\n";
     starvation_rate_+=tick_dt_;
     //std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
-    if (starvation_rate_ > 10 && death_event) {
+    if (starvation_rate_ > 30 && death_event) {
       death_event(home_position_);
       return Status::kFailure;
     }
