@@ -52,8 +52,8 @@ namespace api::motion {
             aStarNode *current_node = &start_node;
 
             while (current_node != nullptr) {
-                std::cout << "reconstiution point : " << current_node->position.x << ":" << current_node->position.y <<
-                        std::endl;
+                //std::cout << "reconstiution point : " << current_node->position.x << ":" << current_node->position.y <<
+                        //std::endl;
                 pathPoints.emplace_back(current_node->position);
                 current_node = current_node->previous_node;
             }
@@ -68,25 +68,25 @@ namespace api::motion {
                      std::vector<sf::Vector2f> walkableTiles){
             Path aStarPath;
 
-            std::cout << "Grid step: " << gridStep << "\n";
+            /*std::cout << "Grid step: " << gridStep << "\n";
             // Verify start and end are on grid
             std::cout << "Start aligned: "
                       << (static_cast<int>(start.x) % gridStep == 0 &&
                           static_cast<int>(start.y) % gridStep == 0) << "\n";
             std::cout << "End aligned: "
                       << (static_cast<int>(end.x) % gridStep == 0 &&
-                          static_cast<int>(end.y) % gridStep == 0) << "\n";
+                          static_cast<int>(end.y) % gridStep == 0) << "\n";*/
             
             // Are start / end point in walkables tiles ?
             auto f = std::find(walkableTiles.begin(), walkableTiles.end(), start);
             if (f == walkableTiles.end()) {
-                std::cout << "Start point (" << start.x << ":" << start.y << ")not in walkable tiles" << std::endl;
+              //std::cout << "Start point (" << start.x << ":" << start.y << ")not in walkable tiles" << std::endl;
                 return aStarPath;
             }
 
             auto g = std::find(walkableTiles.begin(), walkableTiles.end(), end);
             if (g == walkableTiles.end()) {
-                std::cout << "End point (" << end.x << ":" << end.y << ") not in walkable tiles" << std::endl;
+              //std::cout << "End point (" << end.x << ":" << end.y << ") not in walkable tiles" << std::endl;
                 return aStarPath;
             }
 
@@ -103,7 +103,7 @@ namespace api::motion {
                 //std::cout << "current node : " << currentNode.position.x << ":" << currentNode.position.y << std::endl;
 
                 if (currentNode.position == end) {
-                    std::cout << "Found path" << std::endl;
+                  //std::cout << "Found path" << std::endl;
                     return ReconstitutePath(currentNode);
                 }
 

@@ -1,7 +1,7 @@
 #include "gameplay/economy_manager.h"
 
 bool EconomyManager::CheckBuildingCost(size_t wood_cost, size_t stone_cost) {
-  if(wood_cost > wood_economy_ || stone_cost > stone_economy_){
+  if(wood_cost > woodEconomy_ || stone_cost > stoneEconomy_){
     return false;
   }
   return true;
@@ -9,42 +9,42 @@ bool EconomyManager::CheckBuildingCost(size_t wood_cost, size_t stone_cost) {
 
 void EconomyManager::ReduceWoodEconomyBy(const size_t number)
 {
-  wood_economy_ -= number;
+  woodEconomy_ -= number;
 }
 void EconomyManager::IncreaseWoodEconomyBy(const size_t number)
 {
-  wood_economy_ += number;
+  woodEconomy_ += number;
 }
 
 void EconomyManager::ReduceStoneEconomyBy(const size_t number)
 {
-  stone_economy_ -= number;
+  stoneEconomy_ -= number;
 }
 void EconomyManager::IncreaseStoneEconomyBy(const size_t number)
 {
-  stone_economy_ += number;
+  stoneEconomy_ += number;
 }
 
 void EconomyManager::ReduceFoodEconomyBy(const size_t number)
 {
-  food_economy_ -= number;
+  foodEconomy_ -= number;
 }
 void EconomyManager::IncreaseFoodEconomyBy(const size_t number)
 {
-  food_economy_ += number;
+  foodEconomy_ += number;
 }
 
 
 //GET
 size_t EconomyManager::GetWoodEconomy() const
 {
-  return wood_economy_;
+  return woodEconomy_;
 }
 size_t EconomyManager::GetStoneEconomy() const
 {
-  return stone_economy_;
+  return stoneEconomy_;
 }
 size_t EconomyManager::GetFoodEconomy() const
 {
-  return food_economy_;
+  return foodEconomy_;
 }

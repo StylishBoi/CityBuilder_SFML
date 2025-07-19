@@ -37,10 +37,10 @@ void Npc::Setup(std::string_view name, std::string_view filename,
 void Npc::Update(const float dt){
 
   // Updating
-  std::cout << "\n";
+  /*std::cout << "\n";
   std::cout << " -- -- -- -- -- -- -- -- -- -- -- -- -- \n";
   std::cout << "Update " << name_ << "\n";
-  std::cout << " -- -- -- -- -- -- -- -- -- -- -- -- -- \n";
+  std::cout << " -- -- -- -- -- -- -- -- -- -- -- -- -- \n";*/
 
   if (!path_->IsValid()) {
     std::cout << "NPC " << name_ << " has no valid path\n";
