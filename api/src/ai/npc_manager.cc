@@ -8,8 +8,13 @@
 
 namespace api::ai {
 
-void NpcManager::Add(NpcType type, TileMap* tilemap, sf::Vector2f start_position, ResourceManager& resources_manager, EconomyManager* economyManager) {
-  CreateNpc(npcs_, type, tilemap, start_position, resources_manager, economyManager);
+void NpcManager::Add(NpcType type,
+                     TileMap* tilemap,
+                     sf::Vector2f start_position,
+                     ResourceManager& resources_manager,
+                     EconomyManager* economyManager,
+                     std::function<void(sf::Vector2f)> deathEvent) {
+  CreateNpc(npcs_, type, tilemap, start_position, resources_manager, economyManager, deathEvent);;
 }
 
 void NpcManager::Update(float dt) {
@@ -26,9 +31,12 @@ void NpcManager::Draw(sf::RenderWindow& window) {
     npc.Draw(window);
   }
 }
-void NpcManager::RemoveNPC(Npc removedNpc) {
-  for (auto& npc : npcs_) {
-  }
+void NpcManager::RemoveNPC(sf::Vector2f npc_position) {
+  auto removeIter = std::remove_if(npcs_.begin(), npcs_.end(),
+                                   [&npc_position](const Npc& npc) {
+                                     return npc.GetHomePosition() == npc_position;
+                                   });
+  npcs_.erase(removeIter, npcs_.end());
 }
 
 }

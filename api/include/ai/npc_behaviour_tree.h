@@ -11,16 +11,21 @@
 
 namespace api::ai {
 class NpcBehaviourTree {
+
   // Behaviour tree
   std::unique_ptr<core::ai::behaviour_tree::Node> bt_root_;
+  // Behaviours
+  float hunger_ = 0.0f;
+  float tick_dt_ =0;
+  float starvation_rate_=0;
 
+
+  //Movement
   TileMap *tilemap_ = nullptr;
-
   motion::Motor *npc_motor_ = nullptr;
   motion::Path *path_ = nullptr;
-
-
   void SetDestination(const sf::Vector2f& destination) const;
+
   // Actions
   [[nodiscard]] core::ai::behaviour_tree::Status CheckHunger();
   [[nodiscard]] core::ai::behaviour_tree::Status Move() const;
@@ -29,16 +34,14 @@ class NpcBehaviourTree {
   [[nodiscard]] core::ai::behaviour_tree::Status GetResource();
   [[nodiscard]] core::ai::behaviour_tree::Status Idle();
 
+
+  std::function<void(sf::Vector2f)> death_event = nullptr;
+
   // Behaviour Constants
   static constexpr float kHungerRate = 5.f;
   static constexpr float kExploitRate = 1.f;
 
-  // Behaviours
-  float hunger_ = 0.0f;
-  bool resource_available_ = true;
-  float tick_dt_ =0;
-  float starvation_rate_=0;
-
+  // Informations
   sf::Vector2f home_position_;
   std::vector<Resource*> resources_;
   EconomyManager* economy_manager_;
@@ -52,7 +55,8 @@ class NpcBehaviourTree {
       TileMap* tilemap,
       sf::Vector2f home_position,
       std::vector<Resource*> resources,
-      EconomyManager* economyManager);
+      EconomyManager* economyManager,
+      std::function<void(sf::Vector2f)> deathEvent);
   void Update(float delta_time);
 
 };

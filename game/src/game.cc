@@ -31,8 +31,6 @@ namespace {
   // UI Elements
   api::ui::ButtonFactory btn_factory_;
 
-  //std::unique_ptr<api::ui::EconomyDisplay> economy_display_;
-
   Hover hover_;
 
   std::unique_ptr<api::ui::Button> btn_blue_;
@@ -46,14 +44,14 @@ namespace {
 
 
   void ChopEvent(int index, float quantity) {
-    std::cout << "Chop event : " << index << " : " << quantity << "\n";
+    //std::cout << "Chop event : " << index << " : " << quantity << "\n";
     if (quantity <= 0){
       economy_manager_.IncreaseWoodEconomyBy(10);
       tilemap_ptr_->SetTile(index, TileMap::Tile::kFlowers);
     }
   }
   void MineEvent(int index, float quantity) {
-    std::cout << "Mine event : " << index << " : " << quantity << "\n";
+    //std::cout << "Mine event : " << index << " : " << quantity << "\n";
     if (quantity <= 0){
       economy_manager_.IncreaseStoneEconomyBy(10);
       tilemap_ptr_->SetTile(index, TileMap::Tile::kFlowers);
@@ -61,7 +59,7 @@ namespace {
   }
 
   void HarvestEvent(int index, float quantity) {
-    std::cout << "Harvest event : " << index << " : " << quantity << "\n";
+    //std::cout << "Harvest event : " << index << " : " << quantity << "\n";
     if (quantity <= 0){
       economy_manager_.IncreaseFoodEconomyBy(10);
       tilemap_ptr_->SetTile(index, TileMap::Tile::kFlowers);
@@ -79,6 +77,10 @@ namespace {
         tilemap_ptr_->SetTile(index, TileMap::Tile::kRock);
         break;
     }
+  }
+  void DeathEvent(sf::Vector2f npc_position) {
+    building_manager_.RemoveBuildingAt(npc_position);
+    npc_manager_.RemoveNPC(npc_position);
   }
 
   void Setup() {
@@ -113,7 +115,7 @@ namespace {
               npc_manager_.Add(
                   npc_adding_type, tilemap_ptr_.get(),
                   TileMap::TilePos(sf::Mouse::getPosition(window_)),
-                  resource_manager_, &economy_manager_);
+                  resource_manager_, &economy_manager_, DeathEvent);
               building_manager_.Add(TileMap::TilePos(sf::Mouse::getPosition(window_)), npc_adding_type);
               economy_manager_.ReduceWoodEconomyBy(building_manager_.BuildingWoodPrice(npc_adding_type));
               economy_manager_.ReduceStoneEconomyBy(building_manager_.BuildingStonePrice(npc_adding_type));
@@ -182,8 +184,6 @@ void Loop() {
     resource_manager_.Draw(window_);
     building_manager_.Draw(window_);
     npc_manager_.Draw(window_);
-
-    //economy_display_->Draw(window_);
 
     if(npc_adding_type!=api::ai::NpcType::kNone){
       hover_.Draw(window_);

@@ -29,15 +29,16 @@ class Npc {
  public:
   void Setup(std::string_view name, std::string_view filename,
              TileMap* tilemap, sf::Vector2f& spawn_position,
-             std::vector<Resource*> resources, EconomyManager* economyManager);
+             std::vector<Resource*> resources, EconomyManager* economyManager,
+             std::function<void(sf::Vector2f)> deathEvent);
   void Update(float dt);
   void Draw(sf::RenderWindow &window) const;
   void SetPosition(const sf::Vector2f& position) {
     motor_->SetPosition(position);
   }
-
-  // Motion
-  // void SetPath(const motion::Path &path);
+  sf::Vector2f GetHomePosition() const{
+      return home_position_;
+  }
 
 };
 }

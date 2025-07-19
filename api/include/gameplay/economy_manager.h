@@ -6,7 +6,7 @@ class EconomyManager
  private:
   size_t wood_economy_ = 50;
   size_t stone_economy_ = 50;
-  size_t food_economy_ = 50;
+  size_t food_economy_ = 0;
 
  public:
 

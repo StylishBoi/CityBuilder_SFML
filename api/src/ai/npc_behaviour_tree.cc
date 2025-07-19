@@ -31,27 +31,30 @@ void NpcBehaviourTree::SetDestination(const sf::Vector2f& destination) const {
 }
 
 Status NpcBehaviourTree::CheckHunger() {
-  //std::cout << "Current action : Checking hunger"<<"\n";
-  //std::cout << "Am I hungry ? " << std::to_string(hunger_);
+  std::cout << "Current action : Checking hunger"<<"\n";
+  std::cout << "Am I hungry ? " << std::to_string(hunger_);
 
   if (hunger_ >= 100) {
-    std::cout << " : Yes, I need to find food\n";
+    //std::cout << " : Yes, I need to find food\n";
     starvation_rate_+=tick_dt_;
-    if(starvation_rate_>30){
-
+    std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
+    if (starvation_rate_ > 30 && death_event) {
+      death_event(home_position_);
+      return Status::kFailure; // Return immediately after triggering death
     }
+
 
     SetDestination(home_position_);
     if (!tilemap_) {
-      std::cout << "No tilemap\n";
+      //std::cout << "No tilemap\n";
       return Status::kFailure;
     }
     if (!path_) {
-      std::cout << "No path\n";
+      //std::cout << "No path\n";
       return Status::kFailure;
     }
     if (!npc_motor_) {
-      std::cout << "No motor\n";
+      //std::cout << "No motor\n";
       return Status::kFailure;
     }
     if(economy_manager_->GetFoodEconomy() < 10){
@@ -69,14 +72,14 @@ Status NpcBehaviourTree::CheckHunger() {
 
 
 Status NpcBehaviourTree::Move() const {
-  std::cout << "Current action : Moving"<<"\n";
+  //std::cout << "Current action : Moving"<<"\n";
   // if destination not reachable, return failure
   if (!path_->IsValid()) {
-    std::cout << "Not reachable " << path_->IsValid() << "\n";
-    std::cout << path_->StartPoint().x << ":" << path_->StartPoint().y << "\n";
+    //std::cout << "Not reachable " << path_->IsValid() << "\n";
+    //std::cout << path_->StartPoint().x << ":" << path_->StartPoint().y << "\n";
     return Status::kFailure;
   } else {
-    std::cout << "I'm moving" << "\n";
+    //std::cout << "I'm moving" << "\n";
     if (!path_->IsDone()) {
       // still arriving, return running
       return Status::kRunning;
@@ -89,21 +92,21 @@ Status NpcBehaviourTree::Move() const {
 
 Status NpcBehaviourTree::Eat() {
   // No failure, until we have food storage system
-  std::cout << "Current action : Eating"<<"\n";
-  std::cout << "Hunger : " << hunger_ << "\n";
+  //std::cout << "Current action : Eating"<<"\n";
+  //std::cout << "Hunger : " << hunger_ << "\n";
   hunger_ -= (kHungerRate * tick_dt_)*5;
   if (hunger_ > 0) {
     return Status::kRunning;
   } else {
-    std::cout << "I'm full" << "\n";
+    //std::cout << "I'm full" << "\n";
     return Status::kSuccess;
   }
 }
 
 Status NpcBehaviourTree::PickResource() {
-  std::cout << "Current action : Picking resource"<<"\n";
+  //std::cout << "Current action : Picking resource"<<"\n";
 
-  std::cout << resources_.size() << " resources are empty" << "\n";
+  //std::cout << resources_.size() << " resources are empty" << "\n";
   if (resources_.empty()) {
     return Status::kFailure;
   }
@@ -134,13 +137,13 @@ Status NpcBehaviourTree::PickResource() {
 }
 
 Status NpcBehaviourTree::GetResource() {
-  std::cout << "Current action : Getting resource"<<"\n";
+  //std::cout << "Current action : Getting resource"<<"\n";
 
   if(!current_resource_){
     return Status::kFailure;
   }
 
-  std::cout << "Am I hungry ? " << std::to_string(hunger_)<<"\n";
+  //std::cout << "Am I hungry ? " << std::to_string(hunger_)<<"\n";
   if (current_resource_->GetQty() <= 0) {
     current_resource_->SetWorkStatus(false);
     current_resource_->SetDespawnStatus(true);
@@ -149,19 +152,27 @@ Status NpcBehaviourTree::GetResource() {
 
   current_resource_->Exploit(kExploitRate * tick_dt_);
   hunger_ += kHungerRate * tick_dt_;
+  if(hunger_>100){
+    starvation_rate_+=tick_dt_;
+    std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
+  }
   return Status::kRunning;
 }
 
 Status NpcBehaviourTree::Idle() {
   hunger_ += kHungerRate * tick_dt_;
-  //std::cout << "I'm sleeping" << "\n";
+  if(hunger_>100){
+    starvation_rate_+=tick_dt_;
+    std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
+  }
   return Status::kSuccess;
 }
 
 void NpcBehaviourTree::SetupBehaviourTree(Motor* npc_motor, Path* path,
                                           TileMap* tilemap, sf::Vector2f home_position,
                                           std::vector<Resource*> resources,
-                                          EconomyManager* economyManager) {
+                                          EconomyManager* economyManager,
+                                          std::function<void(sf::Vector2f)> deathEvent) {
   if (resources.empty()) {
     std::cout << "Received null gameplay pointer\n";
   } else {
@@ -177,6 +188,7 @@ void NpcBehaviourTree::SetupBehaviourTree(Motor* npc_motor, Path* path,
   home_position_ = home_position;
   resources_ = resources;
   economy_manager_ = economyManager;
+  death_event = deathEvent;
 
   auto feedSequence = std::make_unique<Sequence>();
   feedSequence->AddChild(std::make_unique<Action>([this]() { return CheckHunger(); }));
