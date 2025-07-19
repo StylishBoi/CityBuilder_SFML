@@ -154,7 +154,7 @@ Status NpcBehaviourTree::GetResource() {
   hunger_ += kHungerRate * tick_dt_;
   if(hunger_>100){
     starvation_rate_+=tick_dt_;
-    std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
+    //std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
   }
   return Status::kRunning;
 }
@@ -163,7 +163,7 @@ Status NpcBehaviourTree::Idle() {
   hunger_ += kHungerRate * tick_dt_;
   if(hunger_>100){
     starvation_rate_+=tick_dt_;
-    std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
+    //std::cout<<"I'm starving : "<<starvation_rate_<<"\n";
   }
   return Status::kSuccess;
 }
