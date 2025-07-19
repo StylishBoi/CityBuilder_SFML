@@ -6,7 +6,7 @@ class EconomyManager
  private:
   size_t woodEconomy_ = 50;
   size_t stoneEconomy_ = 50;
-  size_t foodEconomy_ = 0;
+  size_t foodEconomy_ = 50;
 
  public:
   bool CheckBuildingCost(size_t wood_cost, size_t stone_cost);
